@@ -20,19 +20,19 @@
       <div class="db-body">
         <aside class="db-menu-wrapper">
           <el-menu :default-active="activeMenu" class="db-menu-bar" router>
-            <div v-for="(route, index) in menuRoutes" :key="index">
-              <template v-if="route.children && route.name">
-                <el-submenu :index="route.name">
+            <div v-for="(item, index) in menuConfig" :key="index">
+              <template v-if="item.children && item.label">
+                <el-submenu :index="item.index">
                   <template slot="title">
-                    <i :class="route.iconClass"></i>{{route.name}}
+                    <i :class="item.iconClass"></i>{{item.label}}
                   </template>
-                  <el-menu-item :index="cRoute.name" v-for="(cRoute, cIndex) in route.children" :key="cIndex" :route="cRoute">{{cRoute.name}}</el-menu-item>
+                  <el-menu-item :index="cItem.index" v-for="(cItem, cIndex) in item.children" :key="cIndex" :route="cItem.route">{{cItem.label}}</el-menu-item>
                 </el-submenu>
               </template>
               
-              <template v-if="!route.children && route.name">
-                <el-menu-item :index="route.name" :route="route">
-                  <i :class="route.iconClass"></i>{{route.name}}
+              <template v-if="!item.children && item.label">
+                <el-menu-item :index="item.index" :route="item.route">
+                  <i :class="item.iconClass"></i>{{item.label}}
                 </el-menu-item>
               </template>
             </div>
@@ -53,6 +53,8 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
+  import menuConfig from './menuConfig';
+  
   export default {
     name: 'app',
     data() {
@@ -63,17 +65,16 @@
           avatar: ''
         },
         activeMenu: '',
-        menuRoutes: []
+        menuConfig
       };
     },
     created() {
-      this.activeMenu = this.$route.name;
-      this.menuRoutes = this.$router.options.routes[this.$router.options.routes.length - 1].children;
+      this.activeMenu = this.$route.meta.index;
       this.user = JSON.parse(localStorage.getItem('user'));
     },
     watch: {
       $route(to, from) {
-        this.activeMenu = this.$route.name;
+        this.activeMenu = this.$route.meta.index;
         this.user = JSON.parse(localStorage.getItem('user'));
       }
     },
@@ -133,7 +134,7 @@
         position: fixed;
         left: 0;
         top: 60px;
-        background: red;
+        background: #f5f5f5;
         height: 100%;
         overflow: auto;
         z-index: 98;

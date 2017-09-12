@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Login from '@/pages/login/login';
 import NotFound from '@/pages/common/404';
 import WorksList from '@/pages/works/list/list';
+import WorksDetail from '@/pages/works/detail/detail';
 
 Vue.use(Router);
 
@@ -38,14 +39,27 @@ export default new Router({
         {
           path: 'works',
           component: root,
-          name: '项目',
+          name: 'works',
+          label: '项目',
           iconClass: 'el-icon-message',
           children: [
             {
               path: 'list',
-              name: '列表',
+              name: 'works.list',
+              label: '列表',
               component: WorksList,
-              imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+              meta: {
+                index: 'works'
+              }
+            },
+            {
+              path: 'detail/:id',
+              name: 'works.detail',
+              label: '详情',
+              component: WorksDetail,
+              meta: {
+                index: 'works'
+              }
             }
           ]
         }
