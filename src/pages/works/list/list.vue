@@ -13,7 +13,7 @@
       <el-table-column label="操作">
         <template scope="scope">
           <router-link class="logo" :to="{ name: 'works.detail', params: { id: scope.row.id } }">
-            <el-button type="text" size="small">查看{{scope.row.id}}</el-button>
+            <el-button type="text" size="small">查看</el-button>
           </router-link>
         </template>
       </el-table-column>
