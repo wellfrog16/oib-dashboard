@@ -1,14 +1,20 @@
 <template lang="html">
   <div id="works-list-page">
-    <div></div>
+    <router-link :to="{ name: 'works.create' }">
+      <el-button type="primary" class="create-button">新增作品</el-button>
+    </router-link>
     <el-table :data="works" ref="table">
       <el-table-column
-        prop="date"
-        label="时间">
+        prop="id"
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="name"
         label="名字">
+      </el-table-column>
+      <el-table-column
+        prop="en_name"
+        label="英文名字">
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
@@ -51,6 +57,8 @@
 
 <style lang="scss" type="text/scss">
   #works-list-page {
-  
+    .create-button {
+      margin-bottom: 10px;
+    }
   }
 </style>

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '@/pages/login/login';
 import NotFound from '@/pages/common/404';
+import WorksCreate from '@/pages/works/create/create';
 import WorksList from '@/pages/works/list/list';
 import WorksDetail from '@/pages/works/detail/detail';
 
@@ -40,9 +41,16 @@ export default new Router({
           path: 'works',
           component: root,
           name: 'works',
-          label: '项目',
-          iconClass: 'el-icon-message',
           children: [
+            {
+              path: 'create',
+              name: 'works.create',
+              label: '新建',
+              component: WorksCreate,
+              meta: {
+                index: 'works'
+              }
+            },
             {
               path: 'list',
               name: 'works.list',
