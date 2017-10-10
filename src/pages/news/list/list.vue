@@ -1,9 +1,9 @@
 <template lang="html">
-  <div id="works-list-page">
-    <router-link :to="{ name: 'works.create' }">
-      <el-button type="primary" class="create-button">新增作品</el-button>
+  <div id="news-list-page">
+    <router-link :to="{ name: 'news.create' }">
+      <el-button type="primary" class="create-button">新增新闻</el-button>
     </router-link>
-    <el-table :data="works" ref="table">
+    <el-table :data="news" ref="table">
       <el-table-column
         prop="id"
         label="ID">
@@ -13,12 +13,12 @@
         label="新建时间">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="名字">
+        prop="title"
+        label="标题">
       </el-table-column>
       <el-table-column
-        prop="enName"
-        label="英文名字">
+        prop="enTitle"
+        label="英文标题">
       </el-table-column>
       <el-table-column
         prop="enable"
@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
-          <router-link class="logo" :to="{ name: 'works.detail', params: { id: scope.row.id } }">
+          <router-link class="logo" :to="{ name: 'news.detail', params: { id: scope.row.id } }">
             <el-button type="primary" size="small">查看</el-button>
           </router-link>
           <el-button type="danger" size="small" @click="destroy(scope.row.id)">删除</el-button>
@@ -49,12 +49,12 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import workApi from '../../../api/work';
+  import newsApi from '../../../api/news';
 
   export default {
     data() {
       return {
-        works: [],
+        news: [],
         total: 0,
         pageSize: 20,
         currentPage: 1
@@ -68,8 +68,8 @@
         this.loadTableData(val, this.pageSize);
       },
       async loadTableData(page, rows) {
-        const { content, totalElements } = await workApi.list({ page, rows });
-        this.works = content;
+        const { content, totalElements } = await newsApi.list({ page, rows });
+        this.news = content;
         this.total = totalElements;
       },
       destroy(id) {
@@ -78,7 +78,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          workApi.destroy({ id }).then(() => {
+          newsApi.destroy({ id }).then(() => {
             this.$notify.success({
               type: 'success',
               message: '删除成功!'
@@ -92,7 +92,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  #works-list-page {
+  #news-list-page {
     .create-button {
       margin-bottom: 10px;
     }

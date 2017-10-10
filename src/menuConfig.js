@@ -21,9 +21,9 @@ export default [{
   iconClass: 'el-icon-message',
   index: 'about',
   children: [{
-    label: '列表',
+    label: '内容',
     index: 'about',
-    route: { name: 'about.list' }
+    route: { name: 'about.detailEdit' }
   }]
 }, {
   label: '新闻',

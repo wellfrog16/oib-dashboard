@@ -3,7 +3,6 @@ import { Loading, Notification } from 'element-ui';
 
 const instance = axios.create({
   baseURL: 'http://www.tron-m.com/oib-api',
-  // baseURL: '/oib-api',
   withCredentials: true,
   timeout: 5000
 });
@@ -20,7 +19,7 @@ instance.interceptors.request.use((require) => {
 
 instance.interceptors.response.use((response) => {
   loadingInstancce.close();
-  return response;
+  return response.data;
 }, (error) => {
   loadingInstancce.close();
   Notification.error({

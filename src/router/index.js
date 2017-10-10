@@ -6,6 +6,12 @@ import WorksCreate from '@/pages/works/create/create';
 import WorksList from '@/pages/works/list/list';
 import WorksDetail from '@/pages/works/detail/detail';
 
+import NewsCreate from '@/pages/news/create/create';
+import NewsDetail from '@/pages/news/detail/detail';
+import NewsList from '@/pages/news/list/list';
+
+// import aboutDetailEdit
+
 Vue.use(Router);
 
 const root = Vue.component('root', {
@@ -67,6 +73,40 @@ export default new Router({
               component: WorksDetail,
               meta: {
                 index: 'works'
+              }
+            }
+          ]
+        },
+        {
+          path: 'news',
+          component: root,
+          name: 'news',
+          children: [
+            {
+              path: 'create',
+              name: 'news.create',
+              label: '新建',
+              component: NewsCreate,
+              meta: {
+                index: 'news'
+              }
+            },
+            {
+              path: 'list',
+              name: 'news.list',
+              label: '列表',
+              component: NewsList,
+              meta: {
+                index: 'news'
+              }
+            },
+            {
+              path: 'detail/:id',
+              name: 'news.detail',
+              label: '详情',
+              component: NewsDetail,
+              meta: {
+                index: 'news'
               }
             }
           ]

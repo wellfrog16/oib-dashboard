@@ -28,10 +28,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '*/oib-api/*': {//这里是我配置的名字
-      //   target: 'http://www.tron-m.com/oib-api', //这个路径是我代理到本地tp框架里面
+      // '/oib-api': {//这里是我配置的名字
+      //   target: 'http://www.tron-m.com', //这个路径是我代理到本地tp框架里面
       //   changeOrigin: true, //开启代理
-      //   // pathRewrite: { '^/product': '/product' }  //这里重写路径/run就代理到对应地址
+      //   pathRewrite: { '^/product': '' }  //这里重写路径/run就代理到对应地址
       //
       // }
     },
