@@ -10,6 +10,10 @@ import NewsCreate from '@/pages/news/create/create';
 import NewsDetail from '@/pages/news/detail/detail';
 import NewsList from '@/pages/news/list/list';
 
+import CustomersCreate from '@/pages/customers/create/create';
+import CustomersDetail from '@/pages/customers/detail/detail';
+import CustomersList from '@/pages/customers/list/list';
+
 // import aboutDetailEdit
 
 Vue.use(Router);
@@ -107,6 +111,40 @@ export default new Router({
               component: NewsDetail,
               meta: {
                 index: 'news'
+              }
+            }
+          ]
+        },
+        {
+          path: 'customers',
+          component: root,
+          name: 'customers',
+          children: [
+            {
+              path: 'create',
+              name: 'customers.create',
+              label: '新建',
+              component: CustomersCreate,
+              meta: {
+                index: 'customers'
+              }
+            },
+            {
+              path: 'list',
+              name: 'customers.list',
+              label: '列表',
+              component: CustomersList,
+              meta: {
+                index: 'customers'
+              }
+            },
+            {
+              path: 'detail/:id',
+              name: 'customers.detail',
+              label: '详情',
+              component: CustomersDetail,
+              meta: {
+                index: 'customers'
               }
             }
           ]
