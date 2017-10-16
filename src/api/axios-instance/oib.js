@@ -2,7 +2,8 @@ import axios from 'axios';
 import { Loading, Notification } from 'element-ui';
 
 const instance = axios.create({
-  baseURL: 'http://www.tron-m.com/oib-api',
+  // baseURL: 'http://www.tron-m.com/oib-api',
+  baseURL: 'http://localhost:9999/oib-api',
   withCredentials: true,
   timeout: 5000
 });

@@ -117,18 +117,21 @@
     },
     methods: {
       create() {
-        if (this.localConver) {
-          this.$refs.upload.submit();
-        } else {
-          this.$notify.error({
-            title: '新增失败',
-            message: '请先选择封面图片'
-          });
-        }
+//        if (this.localConver) {
+//          this.$refs.upload.submit();
+//        } else {
+//          this.$notify.error({
+//            title: '新增失败',
+//            message: '请先选择封面图片'
+//          });
+//        }
+        workApi.create(this.work).then(() => {
+          this.gotoListView();
+        });
       },
       handleConverSuccess(res, files) {
         this.work.conver = `http://www.tron-m.com/oib-api/${res.result[0].url}`;
-        workApi.save(this.work).then(() => {
+        workApi.create(this.work).then(() => {
           this.gotoListView();
         });
       },
