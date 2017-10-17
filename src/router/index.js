@@ -5,12 +5,10 @@ import NotFound from '@/pages/common/404';
 import WorksList from '@/pages/works/list/list';
 import WorksCreateDetail from '@/pages/works/create-detail/create-detail';
 
-import NewsCreate from '@/pages/news/create/create';
-import NewsDetail from '@/pages/news/detail/detail';
+import NewsCreateDetail from '@/pages/news/create-detail/create-detail';
 import NewsList from '@/pages/news/list/list';
 
-import CustomersCreate from '@/pages/customers/create/create';
-import CustomersDetail from '@/pages/customers/detail/detail';
+import CustomersCreateDetail from '@/pages/customers/create-detail/create-detail';
 import CustomersList from '@/pages/customers/list/list';
 
 // import aboutDetailEdit
@@ -89,7 +87,7 @@ export default new Router({
               path: 'create',
               name: 'news.create',
               label: '新建',
-              component: NewsCreate,
+              component: NewsCreateDetail,
               meta: {
                 index: 'news'
               }
@@ -107,7 +105,7 @@ export default new Router({
               path: 'detail/:id',
               name: 'news.detail',
               label: '详情',
-              component: NewsDetail,
+              component: NewsCreateDetail,
               meta: {
                 index: 'news'
               }
@@ -123,7 +121,7 @@ export default new Router({
               path: 'create',
               name: 'customers.create',
               label: '新建',
-              component: CustomersCreate,
+              component: CustomersCreateDetail,
               meta: {
                 index: 'customers'
               }
@@ -141,7 +139,7 @@ export default new Router({
               path: 'detail/:id',
               name: 'customers.detail',
               label: '详情',
-              component: CustomersDetail,
+              component: CustomersCreateDetail,
               meta: {
                 index: 'customers'
               }

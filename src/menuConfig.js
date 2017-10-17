@@ -1,13 +1,13 @@
 export default [{
-  label: '首页',
-  iconClass: 'el-icon-message',
-  index: 'index',
-  children: [{
-    label: '列表',
-    index: 'index',
-    route: { name: 'index.list' }
-  }]
-}, {
+//   label: '首页',
+//   iconClass: 'el-icon-message',
+//   index: 'index',
+//   children: [{
+//     label: '列表',
+//     index: 'index',
+//     route: { name: 'index.list' }
+//   }]
+// }, {
   label: '作品',
   iconClass: 'el-icon-message',
   index: 'works',
@@ -43,13 +43,13 @@ export default [{
     index: 'customers',
     route: { name: 'customers.list' }
   }]
-}, {
-  label: '联系我们',
-  iconClass: 'el-icon-message',
-  index: 'contact',
-  children: [{
-    label: '列表',
-    index: 'contact',
-    route: { name: 'contact.list' }
-  }]
+// }, {
+//   label: '联系我们',
+//   iconClass: 'el-icon-message',
+//   index: 'contact',
+//   children: [{
+//     label: '列表',
+//     index: 'contact',
+//     route: { name: 'contact.list' }
+//   }]
 }];

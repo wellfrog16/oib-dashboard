@@ -2,19 +2,20 @@ import oib from '../axios-instance/oib';
 
 const base = '/news';
 
-const get = params => oib.get(`${base}/get.do`, { params }).then(res => res.result);
+const get = (id, params) => oib.get(`${base}/${id}`, { params }).then(res => res.data);
 
-const destroy = params => oib.get(`${base}/delete.do`, { params }).then(res => res.result);
+const destroy = (id, params) => oib.delete(`${base}/${id}`, { params }).then(res => res.data);
 
-const list = params => oib.post(`${base}/list.do`, Object.assign(params || {}, {
-  page: 1, rows: 20
-})).then(res => res.result);
+const list = params => oib.get(`${base}es`, { params }).then(res => res.data);
 
-const save = params => oib.post(`${base}/save.do`, params).then(res => res.result);
+const create = params => oib.post(`${base}`, params).then(res => res.data);
+
+const save = (id, params) => oib.put(`${base}/${id}`, params).then(res => res.data);
 
 export default {
   get,
   destroy,
   list,
+  create,
   save
 };

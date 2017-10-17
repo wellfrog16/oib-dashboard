@@ -9,7 +9,7 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="insertTime"
+        prop="createdAt"
         label="新建时间">
       </el-table-column>
       <el-table-column
@@ -17,8 +17,12 @@
         label="标题">
       </el-table-column>
       <el-table-column
-        prop="enTitle"
-        label="英文标题">
+        prop="sort"
+        label="排序序号">
+      </el-table-column>
+      <el-table-column
+        prop="updatedAt"
+        label="更新时间">
       </el-table-column>
       <el-table-column
         prop="enable"
@@ -78,7 +82,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          newsApi.destroy({ id }).then(() => {
+          newsApi.destroy(id).then(() => {
             this.$notify.success({
               type: 'success',
               message: '删除成功!'
