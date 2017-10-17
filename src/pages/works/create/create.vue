@@ -34,7 +34,7 @@
             <el-upload
               ref="upload"
               class="conver-uploader"
-              action="http://www.tron-m.com/oib-api/resource/upload.do"
+              :action="resourceHost + '/resource/upload.do'"
               :show-file-list="false"
               :on-success="handleConverSuccess"
               :on-change="handleConverChange"
@@ -99,7 +99,8 @@
           converVideoUrl: 'http://youku.como',
           enable: 1
         },
-        localConver: null
+        localConver: null,
+        resourceHost: 'http://test.tron-m.com/oib-api'
       };
     },
     components: {
@@ -117,20 +118,20 @@
     },
     methods: {
       create() {
-//        if (this.localConver) {
-//          this.$refs.upload.submit();
-//        } else {
-//          this.$notify.error({
-//            title: '新增失败',
-//            message: '请先选择封面图片'
-//          });
-//        }
-        workApi.create(this.work).then(() => {
-          this.gotoListView();
-        });
+        if (this.localConver) {
+          this.$refs.upload.submit();
+        } else {
+          this.$notify.error({
+            title: '新增失败',
+            message: '请先选择封面图片'
+          });
+        }
+//        workApi.create(this.work).then(() => {
+//          this.gotoListView();
+//        });
       },
       handleConverSuccess(res, files) {
-        this.work.conver = `http://www.tron-m.com/oib-api/${res.result[0].url}`;
+        this.work.conver = `${this.resourceHost}/${res.result[0].url}`;
         workApi.create(this.work).then(() => {
           this.gotoListView();
         });

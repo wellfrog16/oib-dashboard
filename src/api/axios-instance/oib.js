@@ -20,7 +20,17 @@ instance.interceptors.request.use((require) => {
 
 instance.interceptors.response.use((response) => {
   loadingInstancce.close();
-  return response.data;
+  const { config, data } = response;
+  if (data.code === 200 && (config.method === 'post' || config.method === 'put' || config.method === 'delete')) {
+    Notification.success({
+      title: '操作成功'
+    });
+  } else if (data.code !== 200) {
+    Notification.error({
+      title: data.msg
+    });
+  }
+  return data;
 }, (error) => {
   loadingInstancce.close();
   Notification.error({

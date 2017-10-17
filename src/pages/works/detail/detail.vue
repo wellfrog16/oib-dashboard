@@ -38,7 +38,7 @@
               v-if="isEditing"
               ref="upload"
               class="conver-uploader"
-              action="http://www.tron-m.com/oib-api/resource/upload.do"
+              :action="resourceHost + '/resource/upload.do'"
               :show-file-list="false"
               :on-success="handleConverSuccess"
               :on-change="handleConverChange"
@@ -108,7 +108,8 @@
         work: {},
         prework: {},
         localConver: null,
-        hasConverChanged: false
+        hasConverChanged: false,
+        resourceHost: 'http://test.tron-m.com/oib-api'
       };
     },
     components: {
@@ -121,7 +122,7 @@
     },
     async created() {
       const { id } = this.$route.params;
-      this.work = await workApi.get({ id });
+      this.work = await workApi.get(id);
       this.localConver = this.work.conver;
     },
     computed: {
@@ -134,14 +135,14 @@
         if (this.hasConverChanged) {
           this.$refs.upload.submit();
         } else {
-          workApi.save(this.work).then(() => {
+          workApi.save(this.work.id, this.work).then(() => {
             this.gotoListView();
           });
         }
       },
       handleConverSuccess(res, files) {
-        this.work.conver = `http://www.tron-m.com/oib-api/${res.result[0].url}`;
-        workApi.save(this.work).then(() => {
+        this.work.conver = `${this.resourceHost}/${res.result[0].url}`;
+        workApi.save(this.work.id, this.work).then(() => {
           this.gotoListView();
         });
       },

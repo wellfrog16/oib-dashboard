@@ -9,7 +9,7 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="createAt"
+        prop="createdAt"
         label="新建时间">
       </el-table-column>
       <el-table-column
@@ -19,6 +19,10 @@
       <el-table-column
         prop="enName"
         label="英文名字">
+      </el-table-column>
+      <el-table-column
+        prop="updatedAt"
+        label="更新时间">
       </el-table-column>
       <el-table-column
         prop="enable"
@@ -79,10 +83,6 @@
           type: 'warning'
         }).then(() => {
           workApi.destroy(id).then(() => {
-            this.$notify.success({
-              type: 'success',
-              message: '删除成功!'
-            });
             this.loadTableData(this.currentPage, this.pageSize);
           });
         });
