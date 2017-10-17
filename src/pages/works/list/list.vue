@@ -17,8 +17,8 @@
         label="名字">
       </el-table-column>
       <el-table-column
-        prop="enName"
-        label="英文名字">
+        prop="sort"
+        label="排序序号">
       </el-table-column>
       <el-table-column
         prop="updatedAt"

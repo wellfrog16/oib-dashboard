@@ -2,9 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '@/pages/login/login';
 import NotFound from '@/pages/common/404';
-import WorksCreate from '@/pages/works/create/create';
 import WorksList from '@/pages/works/list/list';
-import WorksDetail from '@/pages/works/detail/detail';
+import WorksCreateDetail from '@/pages/works/create-detail/create-detail';
 
 import NewsCreate from '@/pages/news/create/create';
 import NewsDetail from '@/pages/news/detail/detail';
@@ -56,7 +55,7 @@ export default new Router({
               path: 'create',
               name: 'works.create',
               label: '新建',
-              component: WorksCreate,
+              component: WorksCreateDetail,
               meta: {
                 index: 'works'
               }
@@ -74,7 +73,7 @@ export default new Router({
               path: 'detail/:id',
               name: 'works.detail',
               label: '详情',
-              component: WorksDetail,
+              component: WorksCreateDetail,
               meta: {
                 index: 'works'
               }
