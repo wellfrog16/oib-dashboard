@@ -1,181 +1,194 @@
 <template lang="html">
-  <div id="about-detail-edit-page">
+  <div id="abouts-detail-page">
+    <div class="op-breadcrumb">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>关于我们</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div>
-      <el-form ref="workForm" :model="work" label-width="150px" label-position="left">
-        <el-form-item label="是否启用">
-          <el-col :span="8">
-            <el-switch
-              v-model="work.enable"
-              on-color="#13ce66"
-              off-color="#ff4949">
-            </el-switch>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="作品名称">
-          <el-col :span="8">
-            <el-input v-model="work.name"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="作品名称（英文）">
-          <el-col :span="8">
-            <el-input v-model="work.en_name"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="封面">
+      <el-form ref="aboutForm" :model="about" label-width="150px" label-position="left">
+        <div v-if="!isEditing">
+          <el-form-item label="ID">
+            <el-col :span="8">{{about.id}}</el-col>
+          </el-form-item>
+          <el-form-item label="创建时间">
+            <el-col :span="8">{{about.createdAt}}</el-col>
+          </el-form-item>
+          <el-form-item label="更新时间">
+            <el-col :span="8">{{about.updatedAt}}</el-col>
+          </el-form-item>
+        </div>
+        <el-form-item label="轮播图">
           <el-col :span="24">
-            <el-upload
-              class="conver-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleConverSuccess"
-              :on-change="handleConverChange"
-              :auto-upload="false"
-              :before-upload="beforeConverUpload">
-              <img v-if="work.conver" :src="work.conver" class="conver">
-              <i v-else class="el-icon-plus conver-uploader-icon"></i>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+            <op-upload-img
+              v-if="isEditing"
+              v-model="about.bannerImg"
+              ref="bannerImgUpload"></op-upload-img>
+            <img class="preview-img" v-else :src="about.bannerImg">
           </el-col>
         </el-form-item>
-        <el-form-item label="封面文字">
-          <el-col :span="8">
-            <el-input v-model="work.conver_text"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="封面文字（英文）">
-          <el-col :span="8">
-            <el-input v-model="work.en_conver_text"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="封面视频地址">
-          <el-col :span="8">
-            <el-input v-model="work.conver_video_url"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="正文">
+        <el-form-item label="公司简介">
           <el-col :span="24">
-            <quill-editor v-model="work.html" ref="myQuillEditor"></quill-editor>
+            <quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.introductionHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
-        <el-form-item label="正文（英文）">
+        <el-form-item label="业务板块">
           <el-col :span="24">
-            <quill-editor v-model="work.en_html" ref="myEnQuillEditor"></quill-editor>
+            <quill-editor v-model="about.serviceHTML" ref="serviceHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.serviceHTML" class="perview-html"></div>
           </el-col>
+        </el-form-item>
+        <el-form-item label="公司组织">
+          <el-col :span="24">
+            <quill-editor v-model="about.compositionHTML" ref="compositionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.compositionHTML" class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="合作伙伴">
+          <el-col :span="24">
+            <quill-editor v-model="about.parterHTML" ref="parterHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.parterHTML" class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="服务理念">
+          <el-col :span="24">
+            <quill-editor v-model="about.philosophyHTML" ref="philosophyHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.philosophyHTML" class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="服务客户">
+          <el-col :span="24">
+            <quill-editor v-model="about.clientsHTML" ref="clientsHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.clientsHTML " class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="独立IP">
+          <el-col :span="24">
+            <quill-editor v-model="about.ipHTML" ref="ipHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.ipHTML " class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="公司愿景">
+          <el-col :span="24">
+            <quill-editor v-model="about.visionHTML" ref="visionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <div v-else v-html="about.visionHTML " class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="奖项">
+          <el-form :model="award" v-for="award of about.awards" label-width="80px">
+            <el-form-item label="名称" style="margin-bottom: 10px;">
+              <el-col :span="8">
+                <el-input v-model="award.title" v-if="isEditing" placeholder="请输入奖项名称"></el-input>
+                <div v-else>{{award.title}}</div>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="类别" style="margin-bottom: 10px;">
+              <el-col :span="8">
+                <el-input v-model="award.category" v-if="isEditing" placeholder="请输入奖项类别"></el-input>
+                <div v-else>{{award.category}}</div>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="颁奖机构" style="margin-bottom: 10px;">
+              <el-col :span="8">
+                <el-input v-model="award.institution" v-if="isEditing" placeholder="请输入颁奖机构"></el-input>
+                <div v-else>{{award.institution}}</div>
+              </el-col>
+              <el-col :span="4" >
+                <el-button type="primary" icon="delete"></el-button>
+              </el-col>
+            </el-form-item>
+          </el-form>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="create">立即创建</el-button>
-          <el-button>取消</el-button>
+          <div v-if="isEditing">
+            <el-button type="primary" @click="save">保存</el-button>
+            <el-button @click="cancelEditMode">取消</el-button>
+          </div>
+          <div v-else>
+            <el-button type="primary" @click="changeEditMode">编辑</el-button>
+            <el-button @click="cancelEditMode">返回</el-button>
+          </div>
         </el-form-item>
       </el-form>
-    </div>
-    <div class="perview-html">
-      <h2>{{work.name}}</h2>
-      <div>{{work.date | formatDate('YYYY-MM-DD HH:mm:ss')}}</div>
-      <div v-html="work.html"></div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import moment from 'moment';
   import { quillEditor } from 'vue-quill-editor';
-  import workApi from '../../../api/work';
+  import aboutApi from '../../../api/about';
+  import opUploadImg from '../../../components/op-upload-img/index';
 
   export default {
     data() {
       return {
-        work: {
-          name: '2017 OIB MOD',
-          en_name: '2017 OIB MOD',
-          conver: '',
-          conver_text: '欧莱雅系列',
-          en_conver_text: 'oulaiya',
-          html: '<h2>我是例子</h2><div>hahahahaah</div>',
-          en_html: '<h2>I am Example</h2><div>hahahahaah</div>',
-          conver_video_url: 'http://youku.como',
-          enable: true
-        }
+        isEditing: false,
+        about: {
+          swipers: [{
+            imgUrl: '' // string, 轮播图链接
+          }],
+          introductionHTML: '<div>公司简介</div>', // 公司简介
+          serviceHTML: '<div>业务板块</div>', // 业务板块
+          compositionHTML: '<div>公司组织</div>', // 公司组织
+          parterHTML: '<div>合作伙伴</div>', // 合作伙伴
+          philosophyHTML: '<div>服务理念</div>', // 服务理念
+          clientsHTML: '<div>服务客户</div>', // 服务客户
+          ipHTML: '<div>独立IP</div>', // 独立IP
+          visionHTML: '<div>公司愿景</div>', // 公司愿景
+          awards: [{ // 奖项
+            title: '2014 PENTAWARDS - BRONZE', // 名称
+            category: 'LUXURY', // 类别
+            institution: 'CMM - MING CREAM DESIGN' // 颁奖机构
+          }, { // 奖项
+            title: '2014 PENTAWARDS - BRONZE', // 名称
+            category: 'LUXURY', // 类别
+            institution: 'CMM - MING CREAM DESIGN' // 颁奖机构
+          }],
+          people: [{
+            avatar: './asset/img/about/wuzhigang.jpg',
+            name: '吴志刚',
+            title: 'OIB总经理',
+            intro: '曾任上市公司、知名企业总经理、市场总监等职，并同时担任中国百货商业协会洗涤化妆品分会副秘书长、中国化妆品市场营销中心副主任、《化妆品观察》、《中国美妆》主笔，《中国化妆品》、《日用化学工业》、《日用化学品科学》编委。曾获中国杰出营销人金鼎奖、中国广告长城奖、中国化妆品营销十大策划人等荣誉。2013年创立广州吴志刚品牌策划有限公司，后与上海念相设计等企业共同组建集团公司OIB。'
+          }]
+        },
+        preabout: {}
       };
     },
     components: {
-      quillEditor
+      quillEditor,
+      opUploadImg
     },
-    filters: {
-      formatDate(value, format) {
-        return moment(value).format(format);
-      }
-    },
-    created() {
+    async created() {
+      this.about = await aboutApi.get() || this.about;
     },
     computed: {
       editor() {
         return this.$refs.myQuillEditor.quill;
       }
     },
-    mounted() {
-//      console.log('this is current quill instance object', this.editor);
-    },
     methods: {
-      create() {
-//        console.log('创建');
-        workApi.save(this.work).then((data) => {
-          console.log('data', data);
+      save() {
+        aboutApi.save(this.about.id, this.about).then(() => {
+          this.cancelEditMode();
         });
       },
-      handleConverSuccess(res, files) {
-        this.work.conver = URL.createObjectURL(files.pop().raw);
+      changeEditMode() {
+        this.isEditing = true;
+        Object.assign(this.preabout, this.about);
       },
-      handleConverChange(res, files) {
-        this.work.conver = URL.createObjectURL(files.pop().raw);
-      },
-      beforeConverUpload(file) {
-        console.log(file);
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+      cancelEditMode() {
+        this.isEditing = false;
+        Object.assign(this.about, this.preabout);
       }
     }
   };
 </script>
 
 <style lang="scss" type="text/scss">
-  #about-detail-edit-page {
+  #abouts-detail-page {
     .op-breadcrumb {
       margin-bottom: 20px;
-    }
-    .perview-html {
-      margin: 20px;
-    }
-  
-    .conver-uploader .el-upload {
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    .conver-uploader .el-upload:hover {
-      border-color: #20a0ff;
-    }
-    .conver-uploader-icon {
-      font-size: 28px;
-      color: #8c939d;
-      width: 178px;
-      height: 178px;
-      line-height: 178px;
-      text-align: center;
-    }
-    .conver {
-      width: 178px;
-      height: 178px;
-      display: block;
     }
   }
 </style>

@@ -11,7 +11,7 @@ import NewsList from '@/pages/news/list/list';
 import CustomersCreateDetail from '@/pages/customers/create-detail/create-detail';
 import CustomersList from '@/pages/customers/list/list';
 
-// import aboutDetailEdit
+import AboutDetailEdit from '@/pages/about/detail-edit/detail-edit';
 
 Vue.use(Router);
 
@@ -142,6 +142,22 @@ export default new Router({
               component: CustomersCreateDetail,
               meta: {
                 index: 'customers'
+              }
+            }
+          ]
+        },
+        {
+          path: 'about',
+          component: root,
+          name: 'about',
+          children: [
+            {
+              path: 'detail',
+              name: 'about.detail',
+              label: '详情',
+              component: AboutDetailEdit,
+              meta: {
+                index: 'about'
               }
             }
           ]

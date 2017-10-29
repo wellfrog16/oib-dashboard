@@ -23,7 +23,7 @@ export default [{
   children: [{
     label: '内容',
     index: 'about',
-    route: { name: 'about.detailEdit' }
+    route: { name: 'about.detail' }
   }]
 }, {
   label: '新闻',
