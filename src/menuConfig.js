@@ -35,13 +35,13 @@ export default [{
     route: { name: 'news.list' }
   }]
 }, {
-  label: '客户',
+  label: '品牌',
   iconClass: 'el-icon-message',
-  index: 'customers',
+  index: 'services',
   children: [{
     label: '列表',
-    index: 'customers',
-    route: { name: 'customers.list' }
+    index: 'services',
+    route: { name: 'services.list' }
   }]
 // }, {
 //   label: '联系我们',

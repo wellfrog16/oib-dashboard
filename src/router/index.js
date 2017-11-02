@@ -8,8 +8,8 @@ import WorksCreateDetail from '@/pages/works/create-detail/create-detail';
 import NewsCreateDetail from '@/pages/news/create-detail/create-detail';
 import NewsList from '@/pages/news/list/list';
 
-import CustomersCreateDetail from '@/pages/customers/create-detail/create-detail';
-import CustomersList from '@/pages/customers/list/list';
+import ServicesCreateDetail from '@/pages/services/create-detail/create-detail';
+import ServicesList from '@/pages/services/list/list';
 
 import AboutDetailEdit from '@/pages/about/detail-edit/detail-edit';
 
@@ -113,35 +113,35 @@ export default new Router({
           ]
         },
         {
-          path: 'customers',
+          path: 'services',
           component: root,
-          name: 'customers',
+          name: 'services',
           children: [
             {
               path: 'create',
-              name: 'customers.create',
+              name: 'services.create',
               label: '新建',
-              component: CustomersCreateDetail,
+              component: ServicesCreateDetail,
               meta: {
-                index: 'customers'
+                index: 'services'
               }
             },
             {
               path: 'list',
-              name: 'customers.list',
+              name: 'services.list',
               label: '列表',
-              component: CustomersList,
+              component: ServicesList,
               meta: {
-                index: 'customers'
+                index: 'services'
               }
             },
             {
               path: 'detail/:id',
-              name: 'customers.detail',
+              name: 'services.detail',
               label: '详情',
-              component: CustomersCreateDetail,
+              component: ServicesCreateDetail,
               meta: {
-                index: 'customers'
+                index: 'services'
               }
             }
           ]

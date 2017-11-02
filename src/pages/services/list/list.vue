@@ -1,9 +1,9 @@
 <template lang="html">
-  <div id="customers-list-page">
-    <router-link :to="{ name: 'customers.create' }">
-      <el-button type="primary" class="create-button">新增客户信息</el-button>
+  <div id="services-list-page">
+    <router-link :to="{ name: 'services.create' }">
+      <el-button type="primary" class="create-button">新增品牌</el-button>
     </router-link>
-    <el-table :data="customers" ref="table">
+    <el-table :data="services" ref="table">
       <el-table-column
         prop="id"
         label="ID">
@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="客户名称">
+        label="品牌名称">
       </el-table-column>
       <el-table-column
         prop="enName"
@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
-          <router-link class="logo" :to="{ name: 'customers.detail', params: { id: scope.row.id } }">
+          <router-link class="logo" :to="{ name: 'services.detail', params: { id: scope.row.id } }">
             <el-button type="primary" size="small">查看</el-button>
           </router-link>
           <el-button type="danger" size="small" @click="destroy(scope.row.id)">删除</el-button>
@@ -58,7 +58,7 @@
   export default {
     data() {
       return {
-        customers: [],
+        services: [],
         total: 0,
         pageSize: 20,
         currentPage: 1
@@ -73,7 +73,7 @@
       },
       async loadTableData(page, rows) {
         const { content, totalElements } = await customerApi.list({ page, rows });
-        this.customers = content;
+        this.services = content;
         this.total = totalElements;
       },
       destroy(id) {
@@ -96,7 +96,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  #customers-list-page {
+  #services-list-page {
     .create-button {
       margin-bottom: 10px;
     }
