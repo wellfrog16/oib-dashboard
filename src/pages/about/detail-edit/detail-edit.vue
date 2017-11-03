@@ -76,7 +76,7 @@
           </el-col>
         </el-form-item>
         <el-form-item label="奖项">
-          <el-form :model="award" v-for="award of about.awards" label-width="80px">
+          <el-form :model="award" v-for="(award, index) of about.awards" :key="index" label-width="80px">
             <el-form-item label="名称" style="margin-bottom: 10px;">
               <el-col :span="8">
                 <el-input v-model="award.title" v-if="isEditing" placeholder="请输入奖项名称"></el-input>

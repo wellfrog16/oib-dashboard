@@ -13,7 +13,7 @@
         label="新建时间">
       </el-table-column>
       <el-table-column
-        prop="title"
+        prop="zh_cn.title"
         label="标题">
       </el-table-column>
       <el-table-column
@@ -83,10 +83,10 @@
           type: 'warning'
         }).then(() => {
           newsApi.destroy(id).then(() => {
-            this.$notify.success({
-              type: 'success',
-              message: '删除成功!'
-            });
+//            this.$notify.success({
+//              type: 'success',
+//              message: '删除成功!'
+//            });
             this.loadTableData(this.currentPage, this.pageSize);
           });
         });

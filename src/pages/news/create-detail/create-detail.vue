@@ -11,20 +11,20 @@
       <el-form ref="newsForm" :model="news" label-width="150px" label-position="left">
         <div v-if="!isInputShown">
           <el-form-item label="ID">
-            <el-col :span="8">{{news.id}}</el-col>
+            <el-col :span="8">{{newsData.id}}</el-col>
           </el-form-item>
           <el-form-item label="创建时间">
-            <el-col :span="8">{{news.createdAt}}</el-col>
+            <el-col :span="8">{{newsData.createdAt}}</el-col>
           </el-form-item>
           <el-form-item label="更新时间">
-            <el-col :span="8">{{news.updatedAt}}</el-col>
+            <el-col :span="8">{{newsData.updatedAt}}</el-col>
           </el-form-item>
         </div>
         <el-form-item label="是否启用">
           <el-col :span="8">
             <el-switch
               :disabled="!isInputShown"
-              v-model="news.enable"
+              v-model="newsData.enable"
               on-color="#13ce66"
               off-color="#ff4949"
               :on-value="1"
@@ -34,17 +34,29 @@
         </el-form-item>
         <el-form-item label="排序序号">
           <el-col :span="8">
-            <el-input v-model="news.sort" v-if="isInputShown" placeholder="请输入排序序号（数字）"></el-input>
-            <div v-else>{{news.sort}}</div>
+            <el-input v-model="newsData.sort" v-if="isInputShown" placeholder="请输入排序序号（数字）"></el-input>
+            <div v-else>{{newsData.sort}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="新闻标题">
+        <el-form-item label="英文版本">
+          <el-col :span="8">
+            <el-switch
+              :disabled="!isInputShown"
+              v-model="lang"
+              on-color="#13ce66"
+              off-color="#ff4949"
+              on-value="en"
+              off-value="zh_cn">
+            </el-switch>
+          </el-col>
+        </el-form-item>
+        <el-form-item :label="`新闻标题${isEnglish ? '（英文）' : ''}`">
           <el-col :span="8">
             <el-input v-model="news.title" v-if="isInputShown" placeholder="请输入作品名称"></el-input>
             <div v-else>{{news.title}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="Banner图">
+        <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <op-upload-img
               v-if="isInputShown"
@@ -53,7 +65,7 @@
             <img class="preview-img" v-else :src="news.bannerImg">
           </el-col>
         </el-form-item>
-        <el-form-item label="正文">
+        <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <quill-editor v-model="news.contentHTML" ref="myQuillEditor" v-if="isInputShown"></quill-editor>
             <div v-else v-html="news.contentHTML" class="perview-html"></div>
@@ -83,24 +95,29 @@
   import newsApi from '../../../api/news';
   import opUploadImg from '../../../components/op-upload-img/index';
 
+  const defaultNewsData = {
+    title: '',
+    bannerImg: '', // string, 头图链接
+    contentHTML: '', // string, 正文
+    information: '', // 信息
+    acknowledgments: [{ // 鸣谢
+      name: '',
+      link: ''
+    }]
+  };
   export default {
     data() {
       return {
         isEditing: false,
         isCreating: false,
-        news: {
-          title: '',
-          bannerImg: '', // string, 头图链接
-          contentHTML: '', // string, 正文
-          information: '', // 信息
-          acknowledgments: [{ // 鸣谢
-            name: '',
-            link: ''
-          }],
+        newsData: {
+//          en: Object.assign({}, defaultNewsData),
+          zh_cn: Object.assign({}, defaultNewsData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null  // number, 排序顺序
         },
-        prenews: {}
+        lang: 'zh_cn',
+        prenewsData: {}
       };
     },
     components: {
@@ -110,12 +127,28 @@
     async created() {
       const { id } = this.$route.params;
       if (id) {
-        this.news = await newsApi.get(id);
+        this.newsData = await newsApi.get(id);
       } else {
         this.isCreating = true;
       }
     },
     computed: {
+      news() {
+        this.newsData[this.lang] = this.newsData[this.lang] || defaultNewsData;
+        return this.newsData[this.lang];
+      },
+//      news: {
+//        getter() {
+//          this.newsData[this.lang] = this.newsData[this.lang] || defaultNewsData;
+//          return this.newsData[this.lang];
+//        },
+//        setter(value) {
+//          this.newsData[this.lang] = value;
+//        }
+//      },
+      isEnglish() {
+        return this.lang === 'en';
+      },
       isInputShown() {
         return this.isEditing || this.isCreating;
       },
@@ -125,30 +158,34 @@
     },
     methods: {
       save() {
-        const { bannerImgUpload } = this.$refs;
-        // 需用户手动上传封面和banner两张图片
-        if (bannerImgUpload.hasImgUploaded()) {
-          if (this.isEditing) {
-            newsApi.save(this.news.id, this.news).then(() => {
-              this.gotoListView();
-            });
-          } else {
-            newsApi.create(this.news).then(() => {
-              this.gotoListView();
-            });
+        this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}），确认保存吗？`).then(() => {
+          const { bannerImgUpload } = this.$refs;
+          // 需用户手动上传封面和banner两张图片
+          if (bannerImgUpload.hasImgUploaded()) {
+            if (this.isEditing) {
+              newsApi.save(this.newsData.id, this.newsData).then(() => {
+                this.gotoListView();
+              });
+            } else {
+              newsApi.create(this.newsData).then(() => {
+                this.gotoListView();
+              });
+            }
           }
-        }
+        });
       },
       gotoListView() {
         this.$router.push({ name: 'news.list' });
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.prenews, this.news);
+        this.lang = 'zh_cn';
+        Object.assign(this.prenewsData, this.newsData);
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.news, this.prenews);
+        this.lang = 'zh_cn';
+        Object.assign(this.newsData, this.prenewsData);
       }
     }
   };

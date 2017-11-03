@@ -20,7 +20,19 @@
             <el-col :span="8">{{work.updatedAt}}</el-col>
           </el-form-item>
         </div>
-        <el-form-item label="是否启用">
+        <el-form-item label="英文版本">
+          <el-col :span="8">
+            <el-switch
+              :disabled="!isInputShown"
+              v-model="work.lang"
+              on-color="#13ce66"
+              off-color="#ff4949"
+              on-value="en"
+              off-value="zh_cn">
+            </el-switch>
+          </el-col>
+        </el-form-item>
+        <el-form-item :label="`是否启用${isEnglish ? '（英文）' : ''}`">
           <el-col :span="8">
             <el-switch
               :disabled="!isInputShown"
@@ -32,13 +44,13 @@
             </el-switch>
           </el-col>
         </el-form-item>
-        <el-form-item label="排序序号">
+        <el-form-item :label="`排序序号${isEnglish ? '（英文）' : ''}`">
           <el-col :span="8">
             <el-input v-model="work.sort" v-if="isInputShown" placeholder="请输入排序序号（数字）"></el-input>
             <div v-else>{{work.sort}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="服务品牌">
+        <el-form-item :label="`服务品牌${isEnglish ? '（英文）' : ''}`">
           <el-select v-model="work.service" placeholder="请选择">
             <el-option
               v-for="(item, index) in serviceOptions"
@@ -48,13 +60,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="作品名称">
+        <el-form-item :label="`作品名称${isEnglish ? '（英文）' : ''}`">
           <el-col :span="8">
             <el-input v-model="work.name" v-if="isInputShown" placeholder="请输入作品名称"></el-input>
             <div v-else>{{work.name}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="封面">
+        <el-form-item :label="`封面${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <op-upload-img
               v-if="isInputShown"
@@ -63,19 +75,19 @@
             <img class="preview-img" v-else :src="work.cover">
           </el-col>
         </el-form-item>
-        <el-form-item label="封面文字">
+        <el-form-item :label="`封面文字${isEnglish ? '（英文）' : ''}`">
           <el-col :span="8">
             <el-input v-model="work.coverText" v-if="isInputShown" placeholder="请输入封面文字"></el-input>
             <div v-else>{{work.coverText}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="封面视频地址">
+        <el-form-item :label="`封面视频地址${isEnglish ? '（英文）' : ''}`">
           <el-col :span="8">
             <el-input v-model="work.coverVideoUrl" v-if="isInputShown" placeholder="请输入封面视频链接"></el-input>
             <div v-else>{{work.coverVideoUrl}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="Banner图">
+        <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <op-upload-img
               v-if="isInputShown"
@@ -84,13 +96,13 @@
             <img class="preview-img" v-else :src="work.bannerImg">
           </el-col>
         </el-form-item>
-        <el-form-item label="正文">
+        <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <quill-editor v-model="work.contentHTML" ref="myQuillEditor" v-if="isInputShown"></quill-editor>
             <div v-else v-html="work.contentHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
-        <el-form-item label="服务标签">
+        <el-form-item :label="`服务标签${isEnglish ? '（英文）' : ''}`">
           <el-tag
             :key="tag"
             v-for="tag in work.tags"
@@ -110,8 +122,8 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
         </el-form-item>
-        <el-form-item label="参与人员">
-          <el-row v-for="(item, index) of work.credits">
+        <el-form-item :label="`参与人员${isEnglish ? '（英文）' : ''}`">
+          <el-row v-for="(item, index) of work.credits" :key="index">
             <el-col :span="5">
               <el-input placeholder="项目角色" v-model="item.job"></el-input>
             </el-col>
@@ -126,8 +138,8 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="服务栏目">
-          <el-row v-for="(item, index) of work.services">
+        <el-form-item :label="`服务栏目${isEnglish ? '（英文）' : ''}`">
+          <el-row v-for="(item, index) of work.services" :key="index">
             <el-col :span="7">
               <el-input placeholder="请输入服务栏目" v-model="item.label"></el-input>
             </el-col>
@@ -170,6 +182,7 @@
         isEditing: false,
         isCreating: false,
         work: {
+          lang: 'zh_cn',
           name: '',
           bannerImg: '', // string, 头图链接
           contentHTML: '', // string, 正文
@@ -214,6 +227,9 @@
       }
     },
     computed: {
+      isEnglish() {
+        return this.work.lang === 'en';
+      },
       isInputShown() {
         return this.isEditing || this.isCreating;
       },
@@ -223,19 +239,21 @@
     },
     methods: {
       save() {
-        const { coverUpload, bannerImgUpload } = this.$refs;
-        // 需用户手动上传封面和banner两张图片
-        if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {
-          if (this.isEditing) {
-            workApi.save(this.work.id, this.work).then(() => {
-              this.gotoListView();
-            });
-          } else {
-            workApi.create(this.work).then(() => {
-              this.gotoListView();
-            });
+        this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}）`).then(() => {
+          const { coverUpload, bannerImgUpload } = this.$refs;
+          // 需用户手动上传封面和banner两张图片
+          if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {
+            if (this.isEditing) {
+              workApi.save(this.work.id, this.work).then(() => {
+                this.gotoListView();
+              });
+            } else {
+              workApi.create(this.work).then(() => {
+                this.gotoListView();
+              });
+            }
           }
-        }
+        });
       },
       gotoListView() {
         this.$router.push({ name: 'works.list' });

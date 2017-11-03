@@ -6,6 +6,7 @@
       :show-file-list="false"
       :on-success="onSuccess"
       :on-change="onChange"
+      :auto-upload="false"
       :before-upload="beforeConverUpload">
       <el-button slot="trigger" size="small" type="primary">上传图片</el-button>
       <el-button :disabled="!isImgChanged" style="margin-left: 10px;" size="small" type="success" @click="submit">{{isImgUploaded ? '已上传' : '上传到服务器'}}</el-button>
@@ -34,6 +35,11 @@
         default: ''
       }
     },
+    watch: {
+      value(value) {
+        this.tempImgUrl = value;
+      }
+    },
     methods: {
       hasImgUploaded() {
         if (!this.tempImgUrl) {
@@ -58,21 +64,19 @@
         this.$refs.opUpload.submit();
       },
       onChange(res, files) {
-        console.log('ppp');
         if (this.lastFile === `${res.name}/${res.size}`) {
           return;
         }
-        loadingInstancce = Loading.service({
-          fullscreen: true,
-          text: '拼命加载中'
-        });
+//        loadingInstancce = Loading.service({
+//          fullscreen: true,
+//          text: '拼命加载中'
+//        });
         this.isImgChanged = true;
         this.isImgUploaded = false;
         this.tempImgUrl = URL.createObjectURL(files[files.length - 1].raw);
         this.$emit('change', res, files);
       },
       onSuccess(res, files) {
-        console.log('csssss');
         this.isImgChanged = false;
         this.isImgUploaded = true;
         loadingInstancce.close();
@@ -83,7 +87,7 @@
         this.$emit('success', res, files);
       },
       beforeConverUpload(file) {
-        console.log(file);
+//        console.log(file);
         if (this.lastFile === `${file.name}/${file.size}`) {
           return false;
         }
