@@ -13,7 +13,7 @@
         label="新建时间">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="zh_cn.name"
         label="名字">
       </el-table-column>
       <el-table-column

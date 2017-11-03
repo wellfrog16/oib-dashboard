@@ -11,32 +11,20 @@
       <el-form ref="workForm" :model="work" label-width="150px" label-position="left">
         <div v-if="!isInputShown">
           <el-form-item label="ID">
-            <el-col :span="8">{{work.id}}</el-col>
+            <el-col :span="8">{{workData.id}}</el-col>
           </el-form-item>
           <el-form-item label="创建时间">
-            <el-col :span="8">{{work.createdAt}}</el-col>
+            <el-col :span="8">{{workData.createdAt}}</el-col>
           </el-form-item>
           <el-form-item label="更新时间">
-            <el-col :span="8">{{work.updatedAt}}</el-col>
+            <el-col :span="8">{{workData.updatedAt}}</el-col>
           </el-form-item>
         </div>
-        <el-form-item label="英文版本">
+        <el-form-item label="是否启用">
           <el-col :span="8">
             <el-switch
               :disabled="!isInputShown"
-              v-model="work.lang"
-              on-color="#13ce66"
-              off-color="#ff4949"
-              on-value="en"
-              off-value="zh_cn">
-            </el-switch>
-          </el-col>
-        </el-form-item>
-        <el-form-item :label="`是否启用${isEnglish ? '（英文）' : ''}`">
-          <el-col :span="8">
-            <el-switch
-              :disabled="!isInputShown"
-              v-model="work.enable"
+              v-model="workData.enable"
               on-color="#13ce66"
               off-color="#ff4949"
               :on-value="1"
@@ -44,10 +32,22 @@
             </el-switch>
           </el-col>
         </el-form-item>
-        <el-form-item :label="`排序序号${isEnglish ? '（英文）' : ''}`">
+        <el-form-item label="排序序号">
           <el-col :span="8">
-            <el-input v-model="work.sort" v-if="isInputShown" placeholder="请输入排序序号（数字）"></el-input>
-            <div v-else>{{work.sort}}</div>
+            <el-input v-model="workData.sort" v-if="isInputShown" placeholder="请输入排序序号（数字）"></el-input>
+            <div v-else>{{workData.sort}}</div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="英文版本">
+          <el-col :span="8">
+            <el-switch
+              :disabled="!isInputShown"
+              v-model="lang"
+              on-color="#13ce66"
+              off-color="#ff4949"
+              on-value="en"
+              off-value="zh_cn">
+            </el-switch>
           </el-col>
         </el-form-item>
         <el-form-item :label="`服务品牌${isEnglish ? '（英文）' : ''}`">
@@ -175,32 +175,36 @@
   import workApi from '../../../api/work';
   import customerApi from '../../../api/customer';
   import opUploadImg from '../../../components/op-upload-img/index';
+  
+  const defaultWorkData = {
+    name: '',
+    bannerImg: '', // string, 头图链接
+    contentHTML: '', // string, 正文
+    cover: '', // string, 封面链接
+    coverText: '', // string, 封面文字
+    coverVideoUrl: '', // string, 封面视频地址
+    tags: ['标签一', '标签二', '标签三'],
+    credits: [{
+      job: 'Project Director',
+      name: '姜国政/jiang'
+    }],
+    service: {}, // 品牌
+    services: [{
+      value: 1,
+      label: 'VI设计'
+    }]
+  };
 
   export default {
     data() {
       return {
         isEditing: false,
         isCreating: false,
-        work: {
-          lang: 'zh_cn',
-          name: '',
-          bannerImg: '', // string, 头图链接
-          contentHTML: '', // string, 正文
-          cover: '', // string, 封面链接
-          coverText: '', // string, 封面文字
-          coverVideoUrl: '', // string, 封面视频地址
+        lang: 'zh_cn',
+        workData: {
+          zh_cn: Object.assign({}, defaultWorkData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null,  // number, 排序顺序
-          tags: ['标签一', '标签二', '标签三'],
-          credits: [{
-            job: 'Project Director',
-            name: '姜国政/jiang'
-          }],
-          service: {}, // 品牌
-          services: [{
-            value: 1,
-            label: 'VI设计'
-          }]
         },
         prework: {},
         inputVisible: false,
@@ -218,17 +222,21 @@
     async created() {
       this.serviceOptions = (await customerApi.list())
         .content.map(item => ({ value: item.id, label: item.name }));
-      this.work.service = this.serviceOptions[0];
       const { id } = this.$route.params;
       if (id) {
-        this.work = await workApi.get(id);
+        this.workData = await workApi.get(id);
       } else {
         this.isCreating = true;
+//        this.work.service = this.serviceOptions[0];
       }
     },
     computed: {
+      work() {
+        this.workData[this.lang] = this.workData[this.lang] || defaultWorkData;
+        return this.workData[this.lang];
+      },
       isEnglish() {
-        return this.work.lang === 'en';
+        return this.lang === 'en';
       },
       isInputShown() {
         return this.isEditing || this.isCreating;
@@ -244,11 +252,11 @@
           // 需用户手动上传封面和banner两张图片
           if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {
             if (this.isEditing) {
-              workApi.save(this.work.id, this.work).then(() => {
+              workApi.save(this.workData.id, this.workData).then(() => {
                 this.gotoListView();
               });
             } else {
-              workApi.create(this.work).then(() => {
+              workApi.create(this.workData).then(() => {
                 this.gotoListView();
               });
             }
@@ -260,11 +268,11 @@
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.prework, this.work);
+        Object.assign(this.prework, this.workData);
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.work, this.prework);
+        Object.assign(this.workData, this.prework);
       },
       handleClose(tag) {
         this.work.tags.splice(this.work.tags.indexOf(tag), 1);

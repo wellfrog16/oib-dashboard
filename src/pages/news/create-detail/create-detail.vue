@@ -111,7 +111,6 @@
         isEditing: false,
         isCreating: false,
         newsData: {
-//          en: Object.assign({}, defaultNewsData),
           zh_cn: Object.assign({}, defaultNewsData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null  // number, 排序顺序
@@ -137,15 +136,6 @@
         this.newsData[this.lang] = this.newsData[this.lang] || defaultNewsData;
         return this.newsData[this.lang];
       },
-//      news: {
-//        getter() {
-//          this.newsData[this.lang] = this.newsData[this.lang] || defaultNewsData;
-//          return this.newsData[this.lang];
-//        },
-//        setter(value) {
-//          this.newsData[this.lang] = value;
-//        }
-//      },
       isEnglish() {
         return this.lang === 'en';
       },
