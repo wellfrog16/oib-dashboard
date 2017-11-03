@@ -13,13 +13,13 @@
         label="新建时间">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="zh_cn.name"
         label="品牌名称">
       </el-table-column>
-      <el-table-column
-        prop="enName"
-        label="名称（英文）">
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--prop="en.name"-->
+        <!--label="名称（英文）">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="updatedAt"
         label="更新时间">
@@ -83,10 +83,10 @@
           type: 'warning'
         }).then(() => {
           customerApi.destroy(id).then(() => {
-            this.$notify.success({
-              type: 'success',
-              message: '删除成功!'
-            });
+//            this.$notify.success({
+//              type: 'success',
+//              message: '删除成功!'
+//            });
             this.loadTableData(this.currentPage, this.pageSize);
           });
         });
