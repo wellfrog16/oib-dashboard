@@ -64,19 +64,6 @@
             <div v-else>{{serviceData.category.label}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item label="服务项目">
-          <el-col :span="8">
-            <el-select v-model="serviceData.project" v-if="isInputShown" placeholder="请选择">
-              <el-option
-                v-for="(item, index) in projectOptions"
-                :key="index"
-                :label="item.label"
-                :value="item">
-              </el-option>
-            </el-select>
-            <div v-else>{{serviceData.project.label}}</div>
-          </el-col>
-        </el-form-item>
         <el-form-item label="英文版本">
           <el-col :span="8">
             <el-switch
@@ -139,10 +126,6 @@
             value: null,
             label: ''
           }, // 行业类别
-          project: {
-            value: null,
-            label: ''
-          }, // 服务项目,
           enable: 1, // number, 是否启用，1是 0否
           sort: 0
         },
@@ -154,15 +137,6 @@
           value: 2,
           label: '美容',
           enLabel: 'meirong'
-        }],
-        projectOptions: [{
-          value: 1,
-          label: '策略',
-          enLabel: 'celve'
-        }, {
-          value: 2,
-          label: '设计',
-          enLabel: 'design'
         }],
         initialOptions: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', '0~9']
           .map(item => ({ value: item, label: item })),
@@ -180,7 +154,6 @@
       } else {
         this.isCreating = true;
         this.serviceData.category = this.categoryOptions[0];
-        this.serviceData.project = this.projectOptions[0];
         this.serviceData.initial = this.initialOptions[0];
       }
     },
