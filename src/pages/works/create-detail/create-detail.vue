@@ -226,10 +226,7 @@
         isCreating: false,
         lang: 'zh_cn',
         workData: {
-          brand: {
-            value: null,
-            label: ''
-          }, // 品牌
+          brand: null, // 品牌
           services: [], // 服务标签
           zh_cn: Object.assign({}, defaultWorkData),
           enable: 1, // number, 是否启用，1是 0否

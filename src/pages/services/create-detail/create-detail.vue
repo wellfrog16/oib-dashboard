@@ -155,19 +155,11 @@
           zh_cn: Object.assign({}, defaultServiceData),
           initial: null, // 英文首字母
           category: null, // 行业类别
+          serviceTags: [], // 服务项目
           enable: 1, // number, 是否启用，1是 0否
           sort: 0
         },
         categoryOptions: [],
-//        categoryOptions: [{
-//          value: 1,
-//          label: '护肤',
-//          enLabel: 'hufu'
-//        }, {
-//          value: 2,
-//          label: '美容',
-//          enLabel: 'meirong'
-//        }],
         newIndustry: {
           label: '',
           enLabel: '',
