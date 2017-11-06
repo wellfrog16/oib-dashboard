@@ -9,7 +9,7 @@
         </el-breadcrumb>
       </div>
       <div>
-        <el-form ref="workForm" :model="work" label-width="150px" label-position="left">
+        <el-form ref="workForm" :rules="vaildation" :model="workData" label-width="150px" label-position="left">
           <div v-if="!isInputShown">
             <el-form-item label="ID">
               <el-col :span="8">{{workData.id}}</el-col>
@@ -39,18 +39,18 @@
               <div v-else>{{workData.sort}}</div>
             </el-col>
           </el-form-item>
-          <el-form-item label="服务品牌">
+          <el-form-item label="服务品牌" prop="brand">
             <el-select v-model="workData.brand" v-if="isInputShown" placeholder="请选择">
               <el-option
                 v-for="item in brandOptions"
-                :key="item.index"
+                :key="item.value"
                 :label="item.label"
                 :value="item.value">
               </el-option>
             </el-select>
             <div v-else>{{workData.brand | formatEnums(brandOptions)}}</div>
           </el-form-item>
-          <el-form-item label="服务标签">
+          <el-form-item label="服务标签" prop="services">
             <div v-if="isInputShown">
               <el-select
                 v-model="workData.services"
@@ -226,7 +226,7 @@
         isCreating: false,
         lang: 'zh_cn',
         workData: {
-          brand: null, // 品牌
+          brand: '', // 品牌
           services: [], // 服务标签
           zh_cn: Object.assign({}, defaultWorkData),
           enable: 1, // number, 是否启用，1是 0否
@@ -238,7 +238,11 @@
         },
         prework: {},
         serviceTagOptions: [],
-        brandOptions: []
+        brandOptions: [],
+        vaildation: {
+          brand: [{ type: 'number', required: true, message: '请选择服务品牌', trigger: 'change' }],
+          services: [{ type: 'array', required: true, message: '请至少选择一个服务标签', trigger: 'change' }]
+        }
       };
     },
     components: {
@@ -284,19 +288,23 @@
     },
     methods: {
       save() {
-        this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}）`).then(() => {
-          const { coverUpload, bannerImgUpload } = this.$refs;
-          // 需用户手动上传封面和banner两张图片
-          if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {
-            if (this.isEditing) {
-              workApi.save(this.workData.id, this.workData).then(() => {
-                this.gotoListView();
-              });
-            } else {
-              workApi.create(this.workData).then(() => {
-                this.gotoListView();
-              });
-            }
+        this.$refs.workForm.validate((vaild) => {
+          if (vaild) {
+            this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}）`).then(() => {
+              const { coverUpload, bannerImgUpload } = this.$refs;
+              // 需用户手动上传封面和banner两张图片
+              if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {
+                if (this.isEditing) {
+                  workApi.save(this.workData.id, this.workData).then(() => {
+                    this.gotoListView();
+                  });
+                } else {
+                  workApi.create(this.workData).then(() => {
+                    this.gotoListView();
+                  });
+                }
+              }
+            });
           }
         });
       },
