@@ -11,6 +11,7 @@ const list = params => oib.get(`${base}s`, { params }).then(res => res.data);
 const create = params => oib.post(`${base}`, params).then(res => res.data);
 
 const save = (id, params) => oib.put(`${base}/${id}`, params).then(res => res.data);
+// const getSliders = () => oib.get()
 
 export default {
   get,
