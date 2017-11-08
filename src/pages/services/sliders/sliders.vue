@@ -19,7 +19,7 @@
   </el-dialog>
 </template>
 <script type="text/ecmascript-6" lang="babel">
-  import opUploadImg from '../../../components/op-upload-img/index';
+  import opUploadImg from '@/components/op-upload-img/index';
   
   export default {
     components: {
