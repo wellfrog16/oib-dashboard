@@ -6,6 +6,7 @@
       </el-breadcrumb>
     </div>
     <div>
+      <el-button type="primary" class="create-button" @click="showSlidersDialog">修改轮播图</el-button>
       <el-form ref="aboutForm" :model="about" label-width="150px" label-position="left">
         <div v-if="!isEditing">
           <el-form-item label="更新时间">
@@ -24,15 +25,15 @@
             </el-switch>
           </el-col>
         </el-form-item>
-        <el-form-item label="轮播图">
-          <el-col :span="24">
-            <op-upload-img
-              v-if="isEditing"
-              v-model="about.bannerImg"
-              ref="bannerImgUpload"></op-upload-img>
-            <img class="preview-img" v-else :src="about.bannerImg">
-          </el-col>
-        </el-form-item>
+        <!--<el-form-item label="轮播图">-->
+          <!--<el-col :span="24">-->
+            <!--<op-upload-img-->
+              <!--v-if="isEditing"-->
+              <!--v-model="about.bannerImg"-->
+              <!--ref="bannerImgUpload"></op-upload-img>-->
+            <!--<img class="preview-img" v-else :src="about.bannerImg">-->
+          <!--</el-col>-->
+        <!--</el-form-item>-->
         <el-form-item :label="`公司简介${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></quill-editor>
@@ -118,6 +119,8 @@
         </el-form-item>
       </el-form>
     </div>
+  
+    <sliders ref="sliders"></sliders>
   </div>
 </template>
 
@@ -125,7 +128,8 @@
   import { quillEditor } from 'vue-quill-editor';
   import aboutApi from '../../../api/about';
   import opUploadImg from '../../../components/op-upload-img/index';
-  
+  import sliders from '../sliders/sliders';
+
   const defaultAboutData = {
     swipers: [{
       imgUrl: '' // string, 轮播图链接
@@ -168,7 +172,8 @@
     },
     components: {
       quillEditor,
-      opUploadImg
+      opUploadImg,
+      sliders
     },
     async created() {
       this.aboutData = await aboutApi.get() || this.aboutData;
@@ -187,6 +192,9 @@
       }
     },
     methods: {
+      showSlidersDialog() {
+        this.$refs.sliders.open();
+      },
       save() {
         aboutApi.save(this.aboutData).then((data) => {
           this.aboutData = data;
