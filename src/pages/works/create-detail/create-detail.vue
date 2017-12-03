@@ -313,11 +313,11 @@
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.prework, this.workData);
+        this.prework = JSON.parse(JSON.stringify(this.workData));
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.workData, this.prework);
+        this.workData = JSON.parse(JSON.stringify(this.prework));
       },
       addCredits() {
         this.work.credits.push({

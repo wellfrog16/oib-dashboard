@@ -36,7 +36,7 @@
         <!--</el-form-item>-->
         <el-form-item :label="`公司简介${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.introductionHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
@@ -128,6 +128,7 @@
   import { quillEditor } from 'vue-quill-editor';
   import aboutApi from '../../../api/about';
   import opUploadImg from '../../../components/op-upload-img/index';
+  import opQuillEditor from '../../../components/op-quill-editor';
   import sliders from '../sliders/sliders';
 
   const defaultAboutData = {
@@ -172,12 +173,12 @@
     },
     components: {
       quillEditor,
+      opQuillEditor,
       opUploadImg,
       sliders
     },
     async created() {
       this.aboutData = await aboutApi.get() || this.aboutData;
-      console.log('fff', this.aboutData);
     },
     computed: {
       about() {
@@ -203,11 +204,11 @@
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.preabout, this.aboutData);
+        this.preabout = JSON.parse(JSON.stringify(this.aboutData));
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.aboutData, this.preabout);
+        this.aboutData = JSON.parse(JSON.stringify(this.preabout));
       }
     }
   };

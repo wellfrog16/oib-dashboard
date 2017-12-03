@@ -219,11 +219,11 @@
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.preserviceData, this.serviceData);
+        this.preserviceData = JSON.parse(JSON.stringify(this.serviceData));
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.serviceData, this.preserviceData);
+        this.serviceData = JSON.parse(JSON.stringify(this.preserviceData));
       },
       addIndustry() {
         industryApi.create(this.newIndustry).then((data) => {

@@ -170,12 +170,12 @@
       changeEditMode() {
         this.isEditing = true;
         this.lang = 'zh_cn';
-        Object.assign(this.prenewsData, this.newsData);
+        this.prenewsData = JSON.parse(JSON.stringify(this.newsData));
       },
       cancelEditMode() {
         this.isEditing = false;
         this.lang = 'zh_cn';
-        Object.assign(this.newsData, this.prenewsData);
+        this.newsData = JSON.parse(JSON.stringify(this.prenewsData));
       }
     }
   };

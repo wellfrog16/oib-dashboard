@@ -6,9 +6,9 @@
       :show-file-list="false"
       :on-success="onSuccess"
       :on-change="onChange"
-      :auto-upload="false"
+      :auto-upload="autoUpload"
       :before-upload="beforeConverUpload">
-      <el-button slot="trigger" size="small" type="primary">上传图片</el-button>
+      <el-button slot="trigger" size="small" type="primary" id="imgInput">上传图片</el-button>
       <el-button :disabled="!isImgChanged" style="margin-left: 10px;" size="small" type="success" @click="submit">{{isImgUploaded ? '已上传' : '上传到服务器'}}</el-button>
       <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
     </el-upload>
@@ -33,6 +33,10 @@
       value: {
         type: String,
         default: ''
+      },
+      autoUpload: {
+        type: Boolean,
+        default: false
       }
     },
     watch: {
@@ -56,12 +60,19 @@
         }
         return true;
       },
+      selectUploadFile() {
+        const fileInput = document.getElementById('imgInput');
+        fileInput.click();
+      },
       submit() {
         loadingInstancce = Loading.service({
           fullscreen: true,
           text: '拼命加载中'
         });
         this.$refs.opUpload.submit();
+      },
+      clearFiles() {
+        this.$refs.opUpload.clearFiles();
       },
       onChange(res, files) {
         if (this.lastFile === `${res.name}/${res.size}`) {
@@ -79,7 +90,9 @@
       onSuccess(res, files) {
         this.isImgChanged = false;
         this.isImgUploaded = true;
-        loadingInstancce.close();
+        if (loadingInstancce) {
+          loadingInstancce.close();
+        }
         this.$notify.success({
           message: '上传成功'
         });
