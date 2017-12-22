@@ -64,10 +64,10 @@
         return num || 0;
       },
       content: {
-        get: function () {
+        get: function get() {
           return this.value;
         },
-        set: function (value) {
+        set: function set(value) {
           this.$emit('input', value);
         }
       }

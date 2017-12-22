@@ -20,7 +20,7 @@
   </el-dialog>
 </template>
 <script type="text/ecmascript-6" lang="babel">
-  import customerApi from '@/api/customer';
+  import aboutApi from '@/api/about';
   import opUploadImg from '@/components/op-upload-img/index';
   
   export default {
@@ -35,7 +35,7 @@
       };
     },
     async created() {
-      this.sliders = ((await customerApi.getSliders()).sliders || [''])
+      this.sliders = ((await aboutApi.getSliders()).sliders || [''])
         .map(item => ({ value: item }));
       this.preSliders = [...this.sliders];
     },
@@ -45,7 +45,7 @@
         this.sliders = [...this.preSliders];
       },
       confirm() {
-        customerApi.saveSliders({
+        aboutApi.saveSliders({
           sliders: this.sliders.filter(item => item.value).map(item => item.value)
         }).then(({ sliders }) => {
           this.dialogVisible = false;
