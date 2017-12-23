@@ -40,14 +40,19 @@
             </el-col>
           </el-form-item>
           <el-form-item label="服务品牌" prop="brand">
-            <el-select v-model="workData.brand" v-if="isInputShown" placeholder="请选择">
-              <el-option
-                v-for="item in brandOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <template v-if="isInputShown">
+              <el-select v-model="workData.brand" placeholder="请选择">
+                <el-option
+                  v-for="item in brandOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              <el-button type="text">
+                <router-link :to="{ name: 'services.create' }">当前无服务品牌，请点击新建品牌</router-link>
+              </el-button>
+            </template>
             <div v-else>{{workData.brand | formatEnums(brandOptions)}}</div>
           </el-form-item>
           <el-form-item label="服务标签" prop="services">
@@ -63,7 +68,7 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-              <el-button type="success" size="small" @click="dialogVisible = true">
+              <el-button type="success" size="small" @click="openDialog">
                 <i class="el-icon-edit"></i>
               </el-button>
             </div>
@@ -166,21 +171,17 @@
       title="添加服务标签"
       :visible.sync="dialogVisible"
       size="tiny">
-      <el-form :model="newServiceTag" label-width="150px" label-position="top">
+      <el-form :model="newServiceTag" label-width="150px" label-position="top" ref="serviceTagForm">
         <el-form-item label="已有标签">
           <div v-for="item in serviceTagOptions" :key="item.value">
             <el-tag type="success" style="margin-left: 10px;">{{item.label}}</el-tag>
             <el-tag type="warning" style="margin-left: 10px;">{{item.enLabel}}</el-tag>
           </div>
         </el-form-item>
-        <el-form-item label="新增标签">
-          <el-row>
-            <el-input style="width: 250px; margin-bottom: 10px;" v-model="newServiceTag.label" placeholder="请填写中文版标签"></el-input>
-          </el-row>
-          <el-row>
-            <el-input style="width: 250px;" v-model="newServiceTag.enLabel" placeholder="请填写英文版标签"></el-input>
-          </el-row>
+        <el-form-item label="新增标签" prop="label" :rules="[{ required: true, message: '中文标签不能为空' }]">
+          <el-input style="width: 250px; margin-bottom: 10px;" v-model="newServiceTag.label" placeholder="请填写中文版标签"></el-input>
         </el-form-item>
+        <el-input style="width: 250px;" v-model="newServiceTag.enLabel" placeholder="请填写英文版标签"></el-input>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -234,7 +235,7 @@
         },
         newServiceTag: {
           label: '',
-          enLabel: '',
+          enLabel: ''
         },
         prework: {},
         serviceTagOptions: [],
@@ -328,14 +329,25 @@
       removeCredits(index) {
         this.work.credits.splice(index, 1);
       },
-      addServiceTag() {
-        serviceTagApi.create(this.newServiceTag).then((data) => {
-          this.serviceTagOptions.push({
-            value: data.id,
-            label: data.label,
-            enLabel: data.enLabel
-          });
-          this.dialogVisible = false;
+      openDialog() {
+        this.dialogVisible = true;
+        this.newServiceTag = {
+          label: '',
+          enLabel: ''
+        };
+      },
+      async addServiceTag() {
+        await this.$refs.serviceTagForm.validate((valid) => {
+          if (valid) {
+            serviceTagApi.create(this.newServiceTag).then((data) => {
+              this.serviceTagOptions.push({
+                value: data.id,
+                label: data.label,
+                enLabel: data.enLabel
+              });
+              this.dialogVisible = false;
+            });
+          }
         });
       }
     }
