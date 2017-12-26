@@ -49,7 +49,7 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-              <el-button type="text">
+              <el-button type="text" v-if="!brandOptions.length">
                 <router-link :to="{ name: 'services.create' }">当前无服务品牌，请点击新建品牌</router-link>
               </el-button>
             </template>
@@ -198,7 +198,7 @@
   import serviceTagApi from '../../../api/service-tag';
   import formatEnums from '../../../filters/enums';
   import opUploadImg from '../../../components/op-upload-img/index';
-  
+
   const defaultWorkData = {
     name: '',
     bannerImg: '', // string, 头图链接
