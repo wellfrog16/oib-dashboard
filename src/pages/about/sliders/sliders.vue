@@ -4,13 +4,15 @@
     :visible.sync="dialogVisible">
     <el-form label-width="150px" label-position="top">
       <el-form-item :label="`第${index + 1}张`" v-for="(item, index) of sliders" :key="index">
+        <el-button type="danger" @click="removePicture(index)">移除图片</el-button>
         <el-col :span="24">
           <op-upload-img
             v-model="item.value"
             ref="bannerImgUpload"></op-upload-img>
-          <el-button type="success" @click="addPicture()" v-if="index == sliders.length - 1">添加图片</el-button>
-          <el-button type="danger" @click="removePicture(index)"  v-if="index !== 0">移除图片</el-button>
         </el-col>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="success" @click="addPicture()">添加图片</el-button>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -22,7 +24,7 @@
 <script type="text/ecmascript-6" lang="babel">
   import aboutApi from '@/api/about';
   import opUploadImg from '@/components/op-upload-img/index';
-  
+
   export default {
     components: {
       opUploadImg
@@ -35,7 +37,7 @@
       };
     },
     async created() {
-      this.sliders = ((await aboutApi.getSliders()).sliders || [''])
+      this.sliders = ((await aboutApi.getSliders()).sliders || [])
         .map(item => ({ value: item }));
       this.preSliders = [...this.sliders];
     },
