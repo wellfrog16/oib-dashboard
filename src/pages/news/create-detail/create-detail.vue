@@ -57,7 +57,7 @@
           </el-col>
         </el-form-item>
         <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
-          <el-col :span="24">
+          <el-col :span="12">
             <op-upload-img
               v-if="isInputShown"
               v-model="news.bannerImg"
