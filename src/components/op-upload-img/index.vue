@@ -12,7 +12,7 @@
       <el-button :disabled="!isImgChanged" style="margin-left: 10px;" size="small" type="success" @click="submit">{{isImgUploaded ? '已上传' : '上传到服务器'}}</el-button>
       <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
     </el-upload>
-    <img class="preview-img" :src="tempImgUrl">
+    <img v-if="tempImgUrl" class="preview-img" :src="tempImgUrl">
   </div>
 </template>
 <script type="text/ecmascript-6" lang="babel">
@@ -122,6 +122,6 @@
 </script>
 <style lang="scss" type="text/scss">
   .op-upload-img {
-  
+
   }
 </style>

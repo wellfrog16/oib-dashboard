@@ -33,12 +33,6 @@
               </el-switch>
             </el-col>
           </el-form-item>
-          <el-form-item label="排序序号">
-            <el-col :span="8">
-              <el-input v-model="serviceData.sort" v-if="isInputShown" placeholder="请输入排序序号（数字）"></el-input>
-              <div v-else>{{serviceData.sort}}</div>
-            </el-col>
-          </el-form-item>
           <el-form-item label="英文首字母">
             <el-col :span="8">
               <el-select v-model="serviceData.initial" v-if="isInputShown" placeholder="请选择">
@@ -143,7 +137,7 @@
   const defaultServiceData = {
     name: ''
   };
-  
+
   export default {
     data() {
       return {
@@ -156,8 +150,7 @@
           initial: null, // 英文首字母
           category: null, // 行业类别
           serviceTags: [], // 服务项目
-          enable: 1, // number, 是否启用，1是 0否
-          sort: 0
+          enable: 1 // number, 是否启用，1是 0否
         },
         categoryOptions: [],
         newIndustry: {
