@@ -9,7 +9,7 @@
         </el-breadcrumb>
       </div>
       <div>
-        <el-form ref="serviceForm" :rules="vaildation" :model="serviceData" label-width="150px" label-position="left">
+        <el-form ref="serviceForm" :model="serviceData" label-width="150px" label-position="left">
           <div v-if="!isInputShown">
             <el-form-item label="ID">
               <el-col :span="8">{{serviceData.id}}</el-col>
@@ -33,7 +33,7 @@
               </el-switch>
             </el-col>
           </el-form-item>
-          <el-form-item label="英文首字母">
+          <el-form-item label="英文首字母" prop="initial" :rules="[{ required: true, message: '请选择首字母', trigger: 'blur' }]">
             <el-col :span="8">
               <el-select v-model="serviceData.initial" v-if="isInputShown" placeholder="请选择">
                 <el-option
@@ -46,7 +46,7 @@
               <div v-else>{{serviceData.initial | formatEnums(initialOptions) }}</div>
             </el-col>
           </el-form-item>
-          <el-form-item label="行业类别" prop="category">
+          <el-form-item label="行业类别" prop="category" :rules="[{ type: 'number', required: true, message: '请选择行业类别', trigger: 'blur' }]">
             <el-col :span="8">
               <div v-if="isInputShown">
                 <el-select v-model="serviceData.category" placeholder="请选择">
@@ -149,7 +149,7 @@
           zh_cn: Object.assign({}, defaultServiceData),
           initial: null, // 英文首字母
           category: null, // 行业类别
-          serviceTags: [], // 服务项目
+          serviceTags: [], // 服务项目，在作品选择服务品牌时添加
           enable: 1 // number, 是否启用，1是 0否
         },
         categoryOptions: [],
@@ -159,10 +159,7 @@
         },
         initialOptions: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', '0~9']
           .map(item => ({ value: item, label: item })),
-        preserviceData: {},
-        vaildation: {
-          category: [{ required: true, message: '请至少选择一个行业类别', trigger: 'change' }]
-        }
+        preserviceData: {}
       };
     },
     components: {
@@ -170,12 +167,13 @@
       opUploadImg
     },
     async created() {
+      this.categoryOptions = (await industryApi.list()).content
+        .map(({ id: value, label }) => ({ value, label }));
       const { id } = this.$route.params;
       if (id) {
         this.serviceData = await customerApi.get(id);
       } else {
         this.isCreating = true;
-        this.categoryOptions = (await industryApi.list()).content;
         this.serviceData.category = this.categoryOptions[0];
         this.serviceData.initial = this.initialOptions[0];
       }
