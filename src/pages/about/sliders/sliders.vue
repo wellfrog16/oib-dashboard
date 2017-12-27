@@ -47,13 +47,17 @@
         this.sliders = [...this.preSliders];
       },
       confirm() {
-        aboutApi.saveSliders({
-          sliders: this.sliders.filter(item => item.value).map(item => item.value)
-        }).then(({ sliders }) => {
-          this.dialogVisible = false;
-          this.sliders = sliders.map(item => ({ value: item }));
-          this.preSliders = [...this.sliders];
-        });
+        const isAllImgsHaveUploaded = this.sliders
+          .every((item, index) => this.$refs.bannerImgUpload[index].hasImgUploaded());
+        if (isAllImgsHaveUploaded) {
+          aboutApi.saveSliders({
+            sliders: this.sliders.filter(item => item.value).map(item => item.value)
+          }).then(({ sliders }) => {
+            this.dialogVisible = false;
+            this.sliders = sliders.map(item => ({ value: item }));
+            this.preSliders = [...this.sliders];
+          });
+        }
       },
       cancel() {
         this.dialogVisible = false;

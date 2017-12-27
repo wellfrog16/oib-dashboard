@@ -24,7 +24,7 @@
 <script type="text/ecmascript-6" lang="babel">
   import customerApi from '@/api/customer';
   import opUploadImg from '@/components/op-upload-img/index';
-  
+
   export default {
     components: {
       opUploadImg
@@ -47,13 +47,17 @@
         this.sliders = [...this.preSliders];
       },
       confirm() {
-        customerApi.saveSliders({
-          sliders: this.sliders.filter(item => item.value).map(item => item.value)
-        }).then(({ sliders }) => {
-          this.dialogVisible = false;
-          this.sliders = sliders.map(item => ({ value: item }));
-          this.preSliders = [...this.sliders];
-        });
+        const isAllImgsHaveUploaded = this.sliders
+          .every((item, index) => this.$refs.bannerImgUpload[index].hasImgUploaded());
+        if (isAllImgsHaveUploaded) {
+          customerApi.saveSliders({
+            sliders: this.sliders.filter(item => item.value).map(item => item.value)
+          }).then(({ sliders }) => {
+            this.dialogVisible = false;
+            this.sliders = sliders.map(item => ({ value: item }));
+            this.preSliders = [...this.sliders];
+          });
+        }
       },
       cancel() {
         this.dialogVisible = false;
