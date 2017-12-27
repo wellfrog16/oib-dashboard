@@ -71,6 +71,28 @@
             <div v-else v-html="news.contentHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
+        <el-form-item :label="`附加${isEnglish ? '（英文）' : ''}`">
+          <el-row v-for="(item, index) of news.additions" :key="index">
+            <el-col :span="5">
+              <el-input v-if="isInputShown" placeholder="标题" v-model="item.title"></el-input>
+              <div v-else>{{item.title}}</div>
+            </el-col>
+            <el-col :span="5" :push="1">
+              <el-input v-if="isInputShown" placeholder="内容" v-model="item.content"></el-input>
+              <div v-else>{{item.content}}</div>
+            </el-col>
+            <el-col :span="5" :push="2">
+              <el-input v-if="isInputShown" placeholder="链接" v-model="item.link"></el-input>
+              <div v-else>{{item.link}}</div>
+            </el-col>
+            <el-col :span="2" :push="3" v-if="isInputShown">
+              <el-button type="danger" size="small" @click="removeAdditions(index)"><i class="el-icon-minus"></i></el-button>
+            </el-col>
+          </el-row>
+          <el-col :span="4" v-if="isInputShown">
+            <el-button type="success" size="small" @click="addAdditions"><i class="el-icon-plus"></i></el-button>
+          </el-col>
+        </el-form-item>
         <el-form-item>
           <div v-if="isEditing">
             <el-button type="primary" @click="save">保存</el-button>
@@ -91,6 +113,7 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
+  import Vue from 'vue';
   import { quillEditor } from 'vue-quill-editor';
   import newsApi from '../../../api/news';
   import opUploadImg from '../../../components/op-upload-img/index';
@@ -99,9 +122,9 @@
     title: '',
     bannerImg: '', // string, 头图链接
     contentHTML: '', // string, 正文
-    information: '', // 信息
-    acknowledgments: [{ // 鸣谢
-      name: '',
+    additions: [{ // 附加
+      title: '',
+      content: '',
       link: ''
     }]
   };
@@ -133,7 +156,16 @@
     },
     computed: {
       news() {
-        this.newsData[this.lang] = this.newsData[this.lang] || defaultNewsData;
+        if (!this.newsData[this.lang]) {
+          this.newsData[this.lang] = defaultNewsData;
+        }
+        if (!this.newsData[this.lang].additions) {
+          Vue.set(this.newsData[this.lang], 'additions', [{
+            title: '',
+            content: '',
+            link: ''
+          }]);
+        }
         return this.newsData[this.lang];
       },
       isEnglish() {
@@ -176,7 +208,17 @@
         this.isEditing = false;
         this.lang = 'zh_cn';
         this.newsData = JSON.parse(JSON.stringify(this.prenewsData));
-      }
+      },
+      addAdditions() {
+        this.news.additions.push({
+          title: '',
+          content: '',
+          link: ''
+        });
+      },
+      removeAdditions(index) {
+        this.news.additions.splice(index, 1);
+      },
     }
   };
 </script>
