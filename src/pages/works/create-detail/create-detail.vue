@@ -76,6 +76,24 @@
               <el-tag type="success" v-for="item of workData.services" :key="item">{{item | formatEnums(serviceTagOptions)}}</el-tag>
             </div>
           </el-form-item>
+          <el-form-item label="封面">
+            <el-col :span="12">
+              <op-upload-img
+                v-if="isInputShown"
+                v-model="workData.cover"
+                ref="coverUpload"></op-upload-img>
+              <img class="preview-img" v-else :src="workData.cover">
+            </el-col>
+          </el-form-item>
+          <el-form-item label="Banner图">
+            <el-col :span="12">
+              <op-upload-img
+                v-if="isInputShown"
+                v-model="workData.bannerImg"
+                ref="bannerImgUpload"></op-upload-img>
+              <img class="preview-img" v-else :src="workData.bannerImg">
+            </el-col>
+          </el-form-item>
           <el-form-item label="英文版本">
             <el-col :span="8">
               <el-switch
@@ -94,15 +112,6 @@
               <div v-else>{{work.name}}</div>
             </el-col>
           </el-form-item>
-          <el-form-item :label="`封面${isEnglish ? '（英文）' : ''}`">
-            <el-col :span="12">
-              <op-upload-img
-                v-if="isInputShown"
-                v-model="work.cover"
-                ref="coverUpload"></op-upload-img>
-              <img class="preview-img" v-else :src="work.cover">
-            </el-col>
-          </el-form-item>
           <el-form-item :label="`封面文字${isEnglish ? '（英文）' : ''}`">
             <el-col :span="8">
               <el-input v-model="work.coverText" v-if="isInputShown" placeholder="请输入封面文字"></el-input>
@@ -113,15 +122,6 @@
             <el-col :span="8">
               <el-input v-model="work.coverVideoUrl" v-if="isInputShown" placeholder="请输入封面视频链接"></el-input>
               <div v-else>{{work.coverVideoUrl}}</div>
-            </el-col>
-          </el-form-item>
-          <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
-            <el-col :span="12">
-              <op-upload-img
-                v-if="isInputShown"
-                v-model="work.bannerImg"
-                ref="bannerImgUpload"></op-upload-img>
-              <img class="preview-img" v-else :src="work.bannerImg">
             </el-col>
           </el-form-item>
           <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
@@ -201,9 +201,7 @@
 
   const defaultWorkData = {
     name: '',
-    bannerImg: '', // string, 头图链接
     contentHTML: '', // string, 正文
-    cover: '', // string, 封面链接
     coverText: '', // string, 封面文字
     coverVideoUrl: '', // string, 封面视频地址
     credits: [{
@@ -229,6 +227,8 @@
         workData: {
           brand: '', // 品牌
           services: [], // 服务标签
+          cover: '', // string, 封面链接
+          bannerImg: '', // string, 头图链接
           zh_cn: Object.assign({}, defaultWorkData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null,  // number, 排序顺序

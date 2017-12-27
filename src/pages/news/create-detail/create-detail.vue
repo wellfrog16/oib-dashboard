@@ -38,6 +38,15 @@
             <div v-else>{{newsData.sort}}</div>
           </el-col>
         </el-form-item>
+        <el-form-item label="Banner图">
+          <el-col :span="12">
+            <op-upload-img
+              v-if="isInputShown"
+              v-model="newsData.bannerImg"
+              ref="bannerImgUpload"></op-upload-img>
+            <img class="preview-img" v-else :src="newsData.bannerImg">
+          </el-col>
+        </el-form-item>
         <el-form-item label="英文版本">
           <el-col :span="8">
             <el-switch
@@ -54,15 +63,6 @@
           <el-col :span="8">
             <el-input v-model="news.title" v-if="isInputShown" placeholder="请输入作品名称"></el-input>
             <div v-else>{{news.title}}</div>
-          </el-col>
-        </el-form-item>
-        <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
-          <el-col :span="12">
-            <op-upload-img
-              v-if="isInputShown"
-              v-model="news.bannerImg"
-              ref="bannerImgUpload"></op-upload-img>
-            <img class="preview-img" v-else :src="news.bannerImg">
           </el-col>
         </el-form-item>
         <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
@@ -120,7 +120,6 @@
 
   const defaultNewsData = {
     title: '',
-    bannerImg: '', // string, 头图链接
     contentHTML: '', // string, 正文
     additions: [{ // 附加
       title: '',
@@ -134,6 +133,7 @@
         isEditing: false,
         isCreating: false,
         newsData: {
+          bannerImg: '', // string, 头图链接
           zh_cn: Object.assign({}, defaultNewsData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null  // number, 排序顺序
