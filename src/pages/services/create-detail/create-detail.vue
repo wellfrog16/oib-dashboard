@@ -9,7 +9,7 @@
         </el-breadcrumb>
       </div>
       <div>
-        <el-form ref="serviceForm" :model="service" label-width="150px" label-position="left">
+        <el-form ref="serviceForm" :rules="vaildation" :model="serviceData" label-width="150px" label-position="left">
           <div v-if="!isInputShown">
             <el-form-item label="ID">
               <el-col :span="8">{{serviceData.id}}</el-col>
@@ -46,7 +46,7 @@
               <div v-else>{{serviceData.initial | formatEnums(initialOptions) }}</div>
             </el-col>
           </el-form-item>
-          <el-form-item label="行业类别">
+          <el-form-item label="行业类别" prop="category">
             <el-col :span="8">
               <div v-if="isInputShown">
                 <el-select v-model="serviceData.category" placeholder="请选择">
@@ -103,21 +103,21 @@
       title="添加行业类别"
       :visible.sync="dialogVisible"
       size="tiny">
-      <el-form :model="newIndustry" label-width="150px" label-position="top">
+      <el-form :model="newIndustry" label-width="150px" label-position="top" ref="newIndustryForm">
         <el-form-item label="已有类别">
           <div v-for="item in categoryOptions" :key="item.value">
             <el-tag type="success" style="margin-left: 10px;">{{item.label}}</el-tag>
             <el-tag type="warning" style="margin-left: 10px;">{{item.enLabel}}</el-tag>
           </div>
         </el-form-item>
-        <el-form-item label="新增类别">
+        <el-form-item label="新增类别" prop="label" :rules="[{ required: true, message: '中文类别不能为空' }]">
           <el-row>
-            <el-input style="width: 250px; margin-bottom: 10px;" v-model="newIndustry.label" placeholder="请填写中文版标签"></el-input>
-          </el-row>
-          <el-row>
-            <el-input style="width: 250px;" v-model="newIndustry.enLabel" placeholder="请填写英文版标签"></el-input>
+            <el-input style="width: 250px; margin-bottom: 10px;" v-model="newIndustry.label" placeholder="请填写中文版类别"></el-input>
           </el-row>
         </el-form-item>
+        <el-row>
+          <el-input style="width: 250px;" v-model="newIndustry.enLabel" placeholder="请填写英文版类别"></el-input>
+        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -159,7 +159,10 @@
         },
         initialOptions: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', '0~9']
           .map(item => ({ value: item, label: item })),
-        preserviceData: {}
+        preserviceData: {},
+        vaildation: {
+          category: [{ required: true, message: '请至少选择一个行业类别', trigger: 'change' }]
+        }
       };
     },
     components: {
@@ -197,15 +200,21 @@
     },
     methods: {
       save() {
-        if (this.isEditing) {
-          customerApi.save(this.serviceData.id, this.serviceData).then(() => {
-            this.gotoListView();
-          });
-        } else {
-          customerApi.create(this.serviceData).then(() => {
-            this.gotoListView();
-          });
-        }
+        this.$refs.serviceForm.validate((vaild) => {
+          if (vaild) {
+            this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}）`).then(() => {
+              if (this.isEditing) {
+                customerApi.save(this.serviceData.id, this.serviceData).then(() => {
+                  this.gotoListView();
+                });
+              } else {
+                customerApi.create(this.serviceData).then(() => {
+                  this.gotoListView();
+                });
+              }
+            });
+          }
+        });
       },
       gotoListView() {
         this.$router.push({ name: 'services.list' });
@@ -219,13 +228,17 @@
         this.serviceData = JSON.parse(JSON.stringify(this.preserviceData));
       },
       addIndustry() {
-        industryApi.create(this.newIndustry).then((data) => {
-          this.categoryOptions.push({
-            value: data.id,
-            label: data.label,
-            enLabel: data.enLabel
-          });
-          this.dialogVisible = false;
+        this.$refs.newIndustryForm.validate((valid) => {
+          if (valid) {
+            industryApi.create(this.newIndustry).then((data) => {
+              this.categoryOptions.push({
+                value: data.id,
+                label: data.label,
+                enLabel: data.enLabel
+              });
+              this.dialogVisible = false;
+            });
+          }
         });
       }
     }
