@@ -58,7 +58,8 @@
       cancel() {
         this.dialogVisible = false;
       },
-      removePicture(index) {
+      async removePicture(index) {
+        await this.$confirm('确认移除图片？');
         this.sliders.splice(index, 1);
       },
       addPicture() {
