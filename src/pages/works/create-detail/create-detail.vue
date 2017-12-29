@@ -289,7 +289,7 @@
       save() {
         this.$refs.workForm.validate((vaild) => {
           if (vaild) {
-            this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}）`).then(() => {
+            this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}），确认保存吗？`).then(() => {
               const { coverUpload, bannerImgUpload } = this.$refs;
               // 需用户手动上传封面和banner两张图片
               if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {

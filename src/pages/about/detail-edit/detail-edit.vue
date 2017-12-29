@@ -154,9 +154,11 @@
         this.$refs.sliders.open();
       },
       save() {
-        aboutApi.save(this.aboutData).then((data) => {
-          this.aboutData = data;
-          this.cancelEditMode();
+        this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}），确认保存吗？`).then(() => {
+          aboutApi.save(this.aboutData).then((data) => {
+            this.aboutData = data;
+            this.isEditing = false;
+          });
         });
       },
       changeEditMode() {
