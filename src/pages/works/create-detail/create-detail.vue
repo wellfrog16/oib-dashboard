@@ -126,7 +126,7 @@
           </el-form-item>
           <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
             <el-col :span="24">
-              <quill-editor v-model="work.contentHTML" ref="myQuillEditor" v-if="isInputShown"></quill-editor>
+              <op-quill-editor v-model="work.contentHTML" ref="myQuillEditor" v-if="isInputShown"></op-quill-editor>
               <div v-else v-html="work.contentHTML" class="perview-html"></div>
             </el-col>
           </el-form-item>
@@ -192,7 +192,6 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import { quillEditor } from 'vue-quill-editor';
   import workApi from '../../../api/work';
   import customerApi from '../../../api/customer';
   import serviceTagApi from '../../../api/service-tag';
@@ -247,7 +246,6 @@
       };
     },
     components: {
-      quillEditor,
       opUploadImg
     },
     async created() {

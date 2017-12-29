@@ -25,15 +25,6 @@
             </el-switch>
           </el-col>
         </el-form-item>
-        <!--<el-form-item label="轮播图">-->
-          <!--<el-col :span="24">-->
-            <!--<op-upload-img-->
-              <!--v-if="isEditing"-->
-              <!--v-model="about.bannerImg"-->
-              <!--ref="bannerImgUpload"></op-upload-img>-->
-            <!--<img class="preview-img" v-else :src="about.bannerImg">-->
-          <!--</el-col>-->
-        <!--</el-form-item>-->
         <el-form-item :label="`公司简介${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
             <op-quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
@@ -42,49 +33,49 @@
         </el-form-item>
         <el-form-item :label="`业务板块${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.serviceHTML" ref="serviceHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.serviceHTML" ref="serviceHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.serviceHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`公司组织${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.compositionHTML" ref="compositionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.compositionHTML" ref="compositionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.compositionHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`合作伙伴${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.parterHTML" ref="parterHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.parterHTML" ref="parterHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.parterHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`服务理念${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.philosophyHTML" ref="philosophyHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.philosophyHTML" ref="philosophyHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.philosophyHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`服务客户${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.clientsHTML" ref="clientsHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.clientsHTML" ref="clientsHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.clientsHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`独立IP${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.ipHTML" ref="ipHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.ipHTML" ref="ipHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.ipHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`公司愿景${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.visionHTML" ref="visionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.visionHTML" ref="visionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.visionHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`奖项${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.awardHTML" ref="awardHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.awardHTML" ref="awardHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.awardHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
@@ -95,21 +86,17 @@
           </div>
           <div v-else>
             <el-button type="primary" @click="changeEditMode">编辑</el-button>
-            <!--<el-button @click="cancelEditMode">返回</el-button>-->
           </div>
         </el-form-item>
       </el-form>
     </div>
-  
+
     <sliders ref="sliders"></sliders>
   </div>
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import { quillEditor } from 'vue-quill-editor';
   import aboutApi from '../../../api/about';
-  import opUploadImg from '../../../components/op-upload-img/index';
-  import opQuillEditor from '../../../components/op-quill-editor';
   import sliders from '../sliders/sliders';
 
   const defaultAboutData = {
@@ -145,9 +132,6 @@
       };
     },
     components: {
-      quillEditor,
-      opQuillEditor,
-      opUploadImg,
       sliders
     },
     async created() {

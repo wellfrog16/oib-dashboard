@@ -14,6 +14,7 @@
   import opUploadImg from '../op-upload-img/index';
 
   export default {
+    name: 'OpQuillEditor',
     data() {
       return {
         addRange: [],

@@ -128,11 +128,9 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import { quillEditor } from 'vue-quill-editor';
   import formatEnums from '@/filters/enums';
   import customerApi from '../../../api/customer';
   import industryApi from '../../../api/industry';
-  import opUploadImg from '../../../components/op-upload-img/index';
 
   const defaultServiceData = {
     name: ''
@@ -161,10 +159,6 @@
           .map(item => ({ value: item, label: item })),
         preserviceData: {}
       };
-    },
-    components: {
-      quillEditor,
-      opUploadImg
     },
     async created() {
       this.categoryOptions = (await industryApi.list()).content

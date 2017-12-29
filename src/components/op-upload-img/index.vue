@@ -8,7 +8,7 @@
       :on-change="onChange"
       :auto-upload="autoUpload"
       :before-upload="beforeConverUpload">
-      <el-button slot="trigger" size="small" type="primary" id="imgInput">上传图片</el-button>
+      <el-button slot="trigger" size="small" type="primary" :id="imgInputId">上传图片</el-button>
       <el-button :disabled="!isImgChanged" style="margin-left: 10px;" size="small" type="success" @click="submit">{{isImgUploaded ? '已上传' : '上传到服务器'}}</el-button>
       <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
     </el-upload>
@@ -26,7 +26,8 @@
         isImgChanged: false,
         isImgUploaded: false,
         resourceHost: 'http://test.tron-m.com/oib-api',
-        lastFile: ''
+        lastFile: '',
+        imgInputId: `imgInput_${this._uid}`
       };
     },
     props: {
@@ -42,6 +43,11 @@
     watch: {
       value(value) {
         this.tempImgUrl = value;
+      }
+    },
+    computed: {
+      uploader() {
+        return this.$refs.opUpload;
       }
     },
     methods: {
@@ -61,7 +67,7 @@
         return true;
       },
       selectUploadFile() {
-        const fileInput = document.getElementById('imgInput');
+        const fileInput = document.getElementById(this.imgInputId);
         fileInput.click();
       },
       submit() {
@@ -69,10 +75,10 @@
           fullscreen: true,
           text: '拼命加载中'
         });
-        this.$refs.opUpload.submit();
+        this.uploader.submit();
       },
       clearFiles() {
-        this.$refs.opUpload.clearFiles();
+        this.uploader.clearFiles();
       },
       onChange(res, files) {
         if (this.lastFile === `${res.name}/${res.size}`) {
@@ -100,7 +106,6 @@
         this.$emit('success', res, files);
       },
       beforeConverUpload(file) {
-//        console.log(file);
         if (this.lastFile === `${file.name}/${file.size}`) {
           return false;
         }

@@ -41,6 +41,7 @@ module.exports = {
     'no-plusplus': 0,
     'no-param-reassign': 0,
     'eqeqeq': 0,
-    'object-shorthand': 0
+    'object-shorthand': 0,
+    'no-underscore-dangle': 0
   }
 }
