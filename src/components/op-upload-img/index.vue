@@ -10,7 +10,7 @@
       :before-upload="beforeConverUpload">
       <el-button slot="trigger" size="small" type="primary" :id="imgInputId">上传图片</el-button>
       <el-button :disabled="!isImgChanged" style="margin-left: 10px;" size="small" type="success" @click="submit">{{isImgUploaded ? '已上传' : '上传到服务器'}}</el-button>
-      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
+      <div class="el-upload__tip" slot="tip">只能上传jpg/png/gif文件，且不超过2M</div>
     </el-upload>
     <img v-if="tempImgUrl" class="preview-img" :src="tempImgUrl">
   </div>
@@ -111,16 +111,16 @@
         }
         this.lastFile = `${file.name}/${file.size}`;
 
-        const isJPGOrPNG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isJPGOrPNGOrGif = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPGOrPNG) {
-          this.$message.error('上传图片只能是 JPG/PNG 格式!');
+        if (!isJPGOrPNGOrGif) {
+          this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2MB!');
         }
-        return isJPGOrPNG && isLt2M;
+        return isJPGOrPNGOrGif && isLt2M;
       }
     }
   };
