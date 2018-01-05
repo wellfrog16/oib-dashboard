@@ -7,11 +7,11 @@
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
-              <img :src="user.avatar">
+              <img :src="avatar">
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item>设置</el-dropdown-item>
+              <!--<el-dropdown-item>个人信息</el-dropdown-item>-->
+              <!--<el-dropdown-item>设置</el-dropdown-item>-->
               <el-dropdown-item @click.native="logout">注销</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -29,7 +29,7 @@
                   <el-menu-item :index="cItem.index" v-for="(cItem, cIndex) in item.children" :key="cIndex" :route="cItem.route">{{cItem.label}}</el-menu-item>
                 </el-submenu>
               </template>
-              
+
               <template v-if="!item.children && item.label">
                 <el-menu-item :index="item.index" :route="item.route">
                   <i :class="item.iconClass"></i>{{item.label}}
@@ -38,7 +38,7 @@
             </div>
           </el-menu>
         </aside>
-        
+
         <div class="db-content-wrapper">
           <section class="db-content">
             <router-view></router-view>
@@ -54,16 +54,17 @@
 
 <script type="text/ecmascript-6" lang="babel">
   import menuConfig from './menuConfig';
-  
+  import API from './api';
+
   export default {
     name: 'app',
     data() {
       return {
         user: {
           id: '',
-          username: '',
-          avatar: ''
+          username: ''
         },
+        avatar: 'https://o0p2nwku4.qnssl.com/favicon.ico',
         activeMenu: '',
         menuConfig
       };
@@ -84,7 +85,8 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'info'
-        }).then(() => {
+        }).then(async () => {
+          await API.requestLogout();
           localStorage.removeItem('user');
           this.$router.push({ path: '/login' });
         }).catch(() => {});
@@ -110,14 +112,14 @@
       position: fixed;
       left: 0;
       top: 0;
-      
+
       .logo {
         font-size: 2.4rem;
       }
-      
+
       .user-info {
         float: right;
-        
+
         img {
           width: 25px;
           height: 25px;
@@ -138,7 +140,7 @@
         height: 100%;
         overflow: auto;
         z-index: 98;
-        
+
         .db-menu-bar {
           height: 100%;
           flex-grow: 0;
@@ -151,10 +153,10 @@
         z-index: 97;
         box-sizing: border-box;
         padding: 60px 0 0 200px;
-        
+
         .db-content {
           padding: 25px;
-          
+
           .db-content-inner {
             padding: 30px 0;
           }

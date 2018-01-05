@@ -35,12 +35,12 @@
 
 <script type="text/ecmascript-6" lang="babel">
   import API from '../../api';
-  
+
   export default {
     data() {
       return {
-        username: 'vvliebe',
-        password: '123456',
+        username: '',
+        password: '',
         rememberMe: false,
         isBtnLoading: false
       };
@@ -50,6 +50,9 @@
         if (this.isBtnLoading) return '登录中...';
         return '登录';
       }
+    },
+    created() {
+      this.username = localStorage.getItem('username');
     },
     methods: {
       login() {
@@ -65,17 +68,22 @@
         this.isBtnLoading = true;
         API.requestLogin({ username, password }).then((data) => {
           this.isBtnLoading = false;
-          const { msg, code, user } = data;
-          if (code !== 200) {
-            this.$message.error(msg);
+          localStorage.setItem('user', JSON.stringify({
+            id: data.id,
+            username
+          }));
+          if (this.rememberMe) {
+            localStorage.setItem('username', username);
           } else {
-            localStorage.setItem('user', JSON.stringify(user));
-            if (this.$route.query.redirect) {
-              this.$router.push({ path: this.$route.query.redirect });
-            } else {
-              this.$router.push({ path: '/works/list' });
-            }
+            localStorage.removeItem('username');
           }
+          if (this.$route.query.redirect) {
+            this.$router.push({ path: this.$route.query.redirect });
+          } else {
+            this.$router.push({ path: '/works/list' });
+          }
+        }).catch(() => {
+          this.isBtnLoading = false;
         });
       }
     }
@@ -90,7 +98,7 @@
     justify-content: center;
     align-items: center;
     background: #efeeee;
-  
+
     .login-form {
       display: flex;
       flex-direction: column;
@@ -101,7 +109,7 @@
       background: white;
       border: 1px #eaeaea solid;
       box-shadow: 0px 0px 25px #cac6c6;
-    
+
       .title {
         color: #20a0ff;
         font-weight: bold;
@@ -110,7 +118,7 @@
         line-height: 2.2;
         font-family: sans-serif;
       }
-      
+
       .input-group {
         margin-top: 30px;
         width: 80%;

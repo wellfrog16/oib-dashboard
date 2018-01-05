@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { Loading, Notification } from 'element-ui';
 
+const baseURL = 'http://localhost:9999/oib-api';
+
 const instance = axios.create({
   // baseURL: 'http://www.tron-m.com/oib-api',
-  baseURL: 'http://localhost:9999/oib-api',
+  baseURL,
+  // baseURL: 'http://oib-cms.tron-m.com/oib-api',
   withCredentials: true,
   timeout: 5000
 });
@@ -29,6 +32,11 @@ instance.interceptors.response.use((response) => {
     Notification.error({
       title: data.msg
     });
+    if (data.code === 401) {
+      // 需要登录
+      window.location.href = `${window.location.origin}/#/login`;
+    }
+    return Promise.reject(data.msg);
   }
   return data;
 }, (error) => {

@@ -6,10 +6,10 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import './style.scss';
-import Mock from './mock';
+// import Mock from './mock';
 import OpQuillEditor from './components/op-quill-editor';
 
-Mock.bootstrap();
+// Mock.bootstrap();
 
 Vue.use((() => {
   OpQuillEditor.install = (iVue) => {
