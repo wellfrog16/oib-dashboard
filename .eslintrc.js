@@ -40,6 +40,9 @@ module.exports = {
     'no-mixed-operators': 0,
     'no-plusplus': 0,
     'no-param-reassign': 0,
-    'eqeqeq': 0
+    'eqeqeq': 0,
+    'object-shorthand': 0,
+    'no-underscore-dangle': 0,
+    'no-unused-expressions': 0
   }
 }

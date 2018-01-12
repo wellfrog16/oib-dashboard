@@ -25,87 +25,59 @@
             </el-switch>
           </el-col>
         </el-form-item>
-        <!--<el-form-item label="轮播图">-->
-          <!--<el-col :span="24">-->
-            <!--<op-upload-img-->
-              <!--v-if="isEditing"-->
-              <!--v-model="about.bannerImg"-->
-              <!--ref="bannerImgUpload"></op-upload-img>-->
-            <!--<img class="preview-img" v-else :src="about.bannerImg">-->
-          <!--</el-col>-->
-        <!--</el-form-item>-->
         <el-form-item :label="`公司简介${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.introductionHTML" ref="introductionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.introductionHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`业务板块${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.serviceHTML" ref="serviceHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.serviceHTML" ref="serviceHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.serviceHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`公司组织${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.compositionHTML" ref="compositionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.compositionHTML" ref="compositionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.compositionHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`合作伙伴${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.parterHTML" ref="parterHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.parterHTML" ref="parterHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.parterHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`服务理念${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.philosophyHTML" ref="philosophyHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.philosophyHTML" ref="philosophyHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.philosophyHTML" class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`服务客户${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.clientsHTML" ref="clientsHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.clientsHTML" ref="clientsHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.clientsHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`独立IP${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.ipHTML" ref="ipHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.ipHTML" ref="ipHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.ipHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`公司愿景${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="about.visionHTML" ref="visionHTMLQuillEditor" v-if="isEditing"></quill-editor>
+            <op-quill-editor v-model="about.visionHTML" ref="visionHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
             <div v-else v-html="about.visionHTML " class="perview-html"></div>
           </el-col>
         </el-form-item>
         <el-form-item :label="`奖项${isEnglish ? '（英文）' : ''}`">
-          <el-form :model="award" v-for="(award, index) of about.awards" :key="index" label-width="80px">
-            <el-form-item label="名称" style="margin-bottom: 10px;">
-              <el-col :span="8">
-                <el-input v-model="award.title" v-if="isEditing" placeholder="请输入奖项名称"></el-input>
-                <div v-else>{{award.title}}</div>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="类别" style="margin-bottom: 10px;">
-              <el-col :span="8">
-                <el-input v-model="award.category" v-if="isEditing" placeholder="请输入奖项类别"></el-input>
-                <div v-else>{{award.category}}</div>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="颁奖机构" style="margin-bottom: 10px;">
-              <el-col :span="8">
-                <el-input v-model="award.institution" v-if="isEditing" placeholder="请输入颁奖机构"></el-input>
-                <div v-else>{{award.institution}}</div>
-              </el-col>
-              <el-col :span="4" >
-                <el-button type="primary" icon="delete"></el-button>
-              </el-col>
-            </el-form-item>
-          </el-form>
+          <el-col :span="24">
+            <op-quill-editor v-model="about.awardHTML" ref="awardHTMLQuillEditor" v-if="isEditing"></op-quill-editor>
+            <div v-else v-html="about.awardHTML " class="perview-html"></div>
+          </el-col>
         </el-form-item>
         <el-form-item>
           <div v-if="isEditing">
@@ -114,43 +86,32 @@
           </div>
           <div v-else>
             <el-button type="primary" @click="changeEditMode">编辑</el-button>
-            <!--<el-button @click="cancelEditMode">返回</el-button>-->
           </div>
         </el-form-item>
       </el-form>
     </div>
-  
+
     <sliders ref="sliders"></sliders>
   </div>
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import { quillEditor } from 'vue-quill-editor';
   import aboutApi from '../../../api/about';
-  import opUploadImg from '../../../components/op-upload-img/index';
   import sliders from '../sliders/sliders';
 
   const defaultAboutData = {
     swipers: [{
       imgUrl: '' // string, 轮播图链接
     }],
-    introductionHTML: '<div>公司简介</div>', // 公司简介
-    serviceHTML: '<div>业务板块</div>', // 业务板块
-    compositionHTML: '<div>公司组织</div>', // 公司组织
-    parterHTML: '<div>合作伙伴</div>', // 合作伙伴
-    philosophyHTML: '<div>服务理念</div>', // 服务理念
-    clientsHTML: '<div>服务客户</div>', // 服务客户
-    ipHTML: '<div>独立IP</div>', // 独立IP
-    visionHTML: '<div>公司愿景</div>', // 公司愿景
-    awards: [{ // 奖项
-      title: '2014 PENTAWARDS - BRONZE', // 名称
-      category: 'LUXURY', // 类别
-      institution: 'CMM - MING CREAM DESIGN' // 颁奖机构
-    }, { // 奖项
-      title: '2014 PENTAWARDS - BRONZE', // 名称
-      category: 'LUXURY', // 类别
-      institution: 'CMM - MING CREAM DESIGN' // 颁奖机构
-    }],
+    introductionHTML: '<div></div>', // 公司简介
+    serviceHTML: '<div></div>', // 业务板块
+    compositionHTML: '<div></div>', // 公司组织
+    parterHTML: '<div></div>', // 合作伙伴
+    philosophyHTML: '<div></div>', // 服务理念
+    clientsHTML: '<div></div>', // 服务客户
+    ipHTML: '<div></div>', // 独立IP
+    visionHTML: '<div></div>', // 公司愿景
+    awardHTML: '<div></div>',
     people: [{
       avatar: './asset/img/about/wuzhigang.jpg',
       name: '吴志刚',
@@ -171,13 +132,10 @@
       };
     },
     components: {
-      quillEditor,
-      opUploadImg,
       sliders
     },
     async created() {
       this.aboutData = await aboutApi.get() || this.aboutData;
-      console.log('fff', this.aboutData);
     },
     computed: {
       about() {
@@ -196,18 +154,20 @@
         this.$refs.sliders.open();
       },
       save() {
-        aboutApi.save(this.aboutData).then((data) => {
-          this.aboutData = data;
-          this.cancelEditMode();
+        this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}），确认保存吗？`).then(() => {
+          aboutApi.save(this.aboutData).then((data) => {
+            this.aboutData = data;
+            this.isEditing = false;
+          });
         });
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.preabout, this.aboutData);
+        this.preabout = JSON.parse(JSON.stringify(this.aboutData));
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.aboutData, this.preabout);
+        this.aboutData = JSON.parse(JSON.stringify(this.preabout));
       }
     }
   };

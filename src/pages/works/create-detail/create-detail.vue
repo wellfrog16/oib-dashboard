@@ -40,14 +40,19 @@
             </el-col>
           </el-form-item>
           <el-form-item label="服务品牌" prop="brand">
-            <el-select v-model="workData.brand" v-if="isInputShown" placeholder="请选择">
-              <el-option
-                v-for="item in brandOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <template v-if="isInputShown">
+              <el-select v-model="workData.brand" placeholder="请选择">
+                <el-option
+                  v-for="item in brandOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              <el-button type="text" v-if="!brandOptions.length">
+                <router-link :to="{ name: 'services.create' }">当前无服务品牌，请点击新建品牌</router-link>
+              </el-button>
+            </template>
             <div v-else>{{workData.brand | formatEnums(brandOptions)}}</div>
           </el-form-item>
           <el-form-item label="服务标签" prop="services">
@@ -63,13 +68,31 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-              <el-button type="success" size="small" @click="dialogVisible = true">
+              <el-button type="success" size="small" @click="openDialog">
                 <i class="el-icon-edit"></i>
               </el-button>
             </div>
             <div v-else>
               <el-tag type="success" v-for="item of workData.services" :key="item">{{item | formatEnums(serviceTagOptions)}}</el-tag>
             </div>
+          </el-form-item>
+          <el-form-item label="封面">
+            <el-col :span="12">
+              <op-upload-img
+                v-if="isInputShown"
+                v-model="workData.cover"
+                ref="coverUpload"></op-upload-img>
+              <img class="preview-img" v-else :src="workData.cover">
+            </el-col>
+          </el-form-item>
+          <el-form-item label="Banner图">
+            <el-col :span="12">
+              <op-upload-img
+                v-if="isInputShown"
+                v-model="workData.bannerImg"
+                ref="bannerImgUpload"></op-upload-img>
+              <img class="preview-img" v-else :src="workData.bannerImg">
+            </el-col>
           </el-form-item>
           <el-form-item label="英文版本">
             <el-col :span="8">
@@ -89,15 +112,6 @@
               <div v-else>{{work.name}}</div>
             </el-col>
           </el-form-item>
-          <el-form-item :label="`封面${isEnglish ? '（英文）' : ''}`">
-            <el-col :span="24">
-              <op-upload-img
-                v-if="isInputShown"
-                v-model="work.cover"
-                ref="coverUpload"></op-upload-img>
-              <img class="preview-img" v-else :src="work.cover">
-            </el-col>
-          </el-form-item>
           <el-form-item :label="`封面文字${isEnglish ? '（英文）' : ''}`">
             <el-col :span="8">
               <el-input v-model="work.coverText" v-if="isInputShown" placeholder="请输入封面文字"></el-input>
@@ -110,18 +124,9 @@
               <div v-else>{{work.coverVideoUrl}}</div>
             </el-col>
           </el-form-item>
-          <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
-            <el-col :span="24">
-              <op-upload-img
-                v-if="isInputShown"
-                v-model="work.bannerImg"
-                ref="bannerImgUpload"></op-upload-img>
-              <img class="preview-img" v-else :src="work.bannerImg">
-            </el-col>
-          </el-form-item>
           <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
             <el-col :span="24">
-              <quill-editor v-model="work.contentHTML" ref="myQuillEditor" v-if="isInputShown"></quill-editor>
+              <op-quill-editor v-model="work.contentHTML" ref="myQuillEditor" v-if="isInputShown"></op-quill-editor>
               <div v-else v-html="work.contentHTML" class="perview-html"></div>
             </el-col>
           </el-form-item>
@@ -166,21 +171,17 @@
       title="添加服务标签"
       :visible.sync="dialogVisible"
       size="tiny">
-      <el-form :model="newServiceTag" label-width="150px" label-position="top">
+      <el-form :model="newServiceTag" label-width="150px" label-position="top" ref="serviceTagForm">
         <el-form-item label="已有标签">
           <div v-for="item in serviceTagOptions" :key="item.value">
             <el-tag type="success" style="margin-left: 10px;">{{item.label}}</el-tag>
             <el-tag type="warning" style="margin-left: 10px;">{{item.enLabel}}</el-tag>
           </div>
         </el-form-item>
-        <el-form-item label="新增标签">
-          <el-row>
-            <el-input style="width: 250px; margin-bottom: 10px;" v-model="newServiceTag.label" placeholder="请填写中文版标签"></el-input>
-          </el-row>
-          <el-row>
-            <el-input style="width: 250px;" v-model="newServiceTag.enLabel" placeholder="请填写英文版标签"></el-input>
-          </el-row>
+        <el-form-item label="新增标签" prop="label" :rules="[{ required: true, message: '中文标签不能为空' }]">
+          <el-input style="width: 250px; margin-bottom: 10px;" v-model="newServiceTag.label" placeholder="请填写中文版标签"></el-input>
         </el-form-item>
+        <el-input style="width: 250px;" v-model="newServiceTag.enLabel" placeholder="请填写英文版标签"></el-input>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -191,18 +192,15 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import { quillEditor } from 'vue-quill-editor';
   import workApi from '../../../api/work';
   import customerApi from '../../../api/customer';
   import serviceTagApi from '../../../api/service-tag';
   import formatEnums from '../../../filters/enums';
   import opUploadImg from '../../../components/op-upload-img/index';
-  
+
   const defaultWorkData = {
     name: '',
-    bannerImg: '', // string, 头图链接
     contentHTML: '', // string, 正文
-    cover: '', // string, 封面链接
     coverText: '', // string, 封面文字
     coverVideoUrl: '', // string, 封面视频地址
     credits: [{
@@ -228,13 +226,15 @@
         workData: {
           brand: '', // 品牌
           services: [], // 服务标签
+          cover: '', // string, 封面链接
+          bannerImg: '', // string, 头图链接
           zh_cn: Object.assign({}, defaultWorkData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null,  // number, 排序顺序
         },
         newServiceTag: {
           label: '',
-          enLabel: '',
+          enLabel: ''
         },
         prework: {},
         serviceTagOptions: [],
@@ -246,7 +246,6 @@
       };
     },
     components: {
-      quillEditor,
       opUploadImg
     },
     async created() {
@@ -290,7 +289,7 @@
       save() {
         this.$refs.workForm.validate((vaild) => {
           if (vaild) {
-            this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}）`).then(() => {
+            this.$confirm(`当前编辑的语言版本为（${this.isEnglish ? '英文' : '中文'}），确认保存吗？`).then(() => {
               const { coverUpload, bannerImgUpload } = this.$refs;
               // 需用户手动上传封面和banner两张图片
               if (coverUpload.hasImgUploaded() && bannerImgUpload.hasImgUploaded()) {
@@ -313,11 +312,11 @@
       },
       changeEditMode() {
         this.isEditing = true;
-        Object.assign(this.prework, this.workData);
+        this.prework = JSON.parse(JSON.stringify(this.workData));
       },
       cancelEditMode() {
         this.isEditing = false;
-        Object.assign(this.workData, this.prework);
+        this.workData = JSON.parse(JSON.stringify(this.prework));
       },
       addCredits() {
         this.work.credits.push({
@@ -328,14 +327,25 @@
       removeCredits(index) {
         this.work.credits.splice(index, 1);
       },
-      addServiceTag() {
-        serviceTagApi.create(this.newServiceTag).then((data) => {
-          this.serviceTagOptions.push({
-            value: data.id,
-            label: data.label,
-            enLabel: data.enLabel
-          });
-          this.dialogVisible = false;
+      openDialog() {
+        this.dialogVisible = true;
+        this.newServiceTag = {
+          label: '',
+          enLabel: ''
+        };
+      },
+      async addServiceTag() {
+        await this.$refs.serviceTagForm.validate((valid) => {
+          if (valid) {
+            serviceTagApi.create(this.newServiceTag).then((data) => {
+              this.serviceTagOptions.push({
+                value: data.id,
+                label: data.label,
+                enLabel: data.enLabel
+              });
+              this.dialogVisible = false;
+            });
+          }
         });
       }
     }

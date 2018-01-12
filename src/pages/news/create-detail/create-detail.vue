@@ -38,6 +38,15 @@
             <div v-else>{{newsData.sort}}</div>
           </el-col>
         </el-form-item>
+        <el-form-item label="Banner图">
+          <el-col :span="12">
+            <op-upload-img
+              v-if="isInputShown"
+              v-model="newsData.bannerImg"
+              ref="bannerImgUpload"></op-upload-img>
+            <img class="preview-img" v-else :src="newsData.bannerImg">
+          </el-col>
+        </el-form-item>
         <el-form-item label="英文版本">
           <el-col :span="8">
             <el-switch
@@ -56,19 +65,32 @@
             <div v-else>{{news.title}}</div>
           </el-col>
         </el-form-item>
-        <el-form-item :label="`Banner图${isEnglish ? '（英文）' : ''}`">
-          <el-col :span="24">
-            <op-upload-img
-              v-if="isInputShown"
-              v-model="news.bannerImg"
-              ref="bannerImgUpload"></op-upload-img>
-            <img class="preview-img" v-else :src="news.bannerImg">
-          </el-col>
-        </el-form-item>
         <el-form-item :label="`正文${isEnglish ? '（英文）' : ''}`">
           <el-col :span="24">
-            <quill-editor v-model="news.contentHTML" ref="myQuillEditor" v-if="isInputShown"></quill-editor>
+            <op-quill-editor v-model="news.contentHTML" ref="myQuillEditor" v-if="isInputShown"></op-quill-editor>
             <div v-else v-html="news.contentHTML" class="perview-html"></div>
+          </el-col>
+        </el-form-item>
+        <el-form-item :label="`附加${isEnglish ? '（英文）' : ''}`">
+          <el-row v-for="(item, index) of news.additions" :key="index">
+            <el-col :span="5">
+              <el-input v-if="isInputShown" placeholder="标题" v-model="item.title"></el-input>
+              <div v-else>{{item.title}}</div>
+            </el-col>
+            <el-col :span="5" :push="1">
+              <el-input v-if="isInputShown" placeholder="内容" v-model="item.content"></el-input>
+              <div v-else>{{item.content}}</div>
+            </el-col>
+            <el-col :span="5" :push="2">
+              <el-input v-if="isInputShown" placeholder="链接" v-model="item.link"></el-input>
+              <div v-else>{{item.link}}</div>
+            </el-col>
+            <el-col :span="2" :push="3" v-if="isInputShown">
+              <el-button type="danger" size="small" @click="removeAdditions(index)"><i class="el-icon-minus"></i></el-button>
+            </el-col>
+          </el-row>
+          <el-col :span="4" v-if="isInputShown">
+            <el-button type="success" size="small" @click="addAdditions"><i class="el-icon-plus"></i></el-button>
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -91,17 +113,16 @@
 </template>
 
 <script type="text/ecmascript-6" lang="babel">
-  import { quillEditor } from 'vue-quill-editor';
+  import Vue from 'vue';
   import newsApi from '../../../api/news';
   import opUploadImg from '../../../components/op-upload-img/index';
 
   const defaultNewsData = {
     title: '',
-    bannerImg: '', // string, 头图链接
     contentHTML: '', // string, 正文
-    information: '', // 信息
-    acknowledgments: [{ // 鸣谢
-      name: '',
+    additions: [{ // 附加
+      title: '',
+      content: '',
       link: ''
     }]
   };
@@ -111,6 +132,7 @@
         isEditing: false,
         isCreating: false,
         newsData: {
+          bannerImg: '', // string, 头图链接
           zh_cn: Object.assign({}, defaultNewsData),
           enable: 1, // number, 是否启用，1是 0否
           sort: null  // number, 排序顺序
@@ -120,7 +142,6 @@
       };
     },
     components: {
-      quillEditor,
       opUploadImg
     },
     async created() {
@@ -133,7 +154,16 @@
     },
     computed: {
       news() {
-        this.newsData[this.lang] = this.newsData[this.lang] || defaultNewsData;
+        if (!this.newsData[this.lang]) {
+          this.newsData[this.lang] = defaultNewsData;
+        }
+        if (!this.newsData[this.lang].additions) {
+          Vue.set(this.newsData[this.lang], 'additions', [{
+            title: '',
+            content: '',
+            link: ''
+          }]);
+        }
         return this.newsData[this.lang];
       },
       isEnglish() {
@@ -170,13 +200,23 @@
       changeEditMode() {
         this.isEditing = true;
         this.lang = 'zh_cn';
-        Object.assign(this.prenewsData, this.newsData);
+        this.prenewsData = JSON.parse(JSON.stringify(this.newsData));
       },
       cancelEditMode() {
         this.isEditing = false;
         this.lang = 'zh_cn';
-        Object.assign(this.newsData, this.prenewsData);
-      }
+        this.newsData = JSON.parse(JSON.stringify(this.prenewsData));
+      },
+      addAdditions() {
+        this.news.additions.push({
+          title: '',
+          content: '',
+          link: ''
+        });
+      },
+      removeAdditions(index) {
+        this.news.additions.splice(index, 1);
+      },
     }
   };
 </script>

@@ -6,13 +6,13 @@
       :show-file-list="false"
       :on-success="onSuccess"
       :on-change="onChange"
-      :auto-upload="false"
+      :auto-upload="autoUpload"
       :before-upload="beforeConverUpload">
-      <el-button slot="trigger" size="small" type="primary">上传图片</el-button>
+      <el-button slot="trigger" size="small" type="primary" :id="imgInputId">上传图片</el-button>
       <el-button :disabled="!isImgChanged" style="margin-left: 10px;" size="small" type="success" @click="submit">{{isImgUploaded ? '已上传' : '上传到服务器'}}</el-button>
-      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
+      <div class="el-upload__tip" slot="tip">只能上传jpg/png/gif文件，且不超过2M</div>
     </el-upload>
-    <img class="preview-img" :src="tempImgUrl">
+    <img v-if="tempImgUrl" class="preview-img" :src="tempImgUrl">
   </div>
 </template>
 <script type="text/ecmascript-6" lang="babel">
@@ -26,18 +26,28 @@
         isImgChanged: false,
         isImgUploaded: false,
         resourceHost: 'http://test.tron-m.com/oib-api',
-        lastFile: ''
+        lastFile: '',
+        imgInputId: `imgInput_${this._uid}`
       };
     },
     props: {
       value: {
         type: String,
         default: ''
+      },
+      autoUpload: {
+        type: Boolean,
+        default: false
       }
     },
     watch: {
       value(value) {
         this.tempImgUrl = value;
+      }
+    },
+    computed: {
+      uploader() {
+        return this.$refs.opUpload;
       }
     },
     methods: {
@@ -56,12 +66,19 @@
         }
         return true;
       },
+      selectUploadFile() {
+        const fileInput = document.getElementById(this.imgInputId);
+        fileInput.click();
+      },
       submit() {
         loadingInstancce = Loading.service({
           fullscreen: true,
           text: '拼命加载中'
         });
-        this.$refs.opUpload.submit();
+        this.uploader.submit();
+      },
+      clearFiles() {
+        this.uploader.clearFiles();
       },
       onChange(res, files) {
         if (this.lastFile === `${res.name}/${res.size}`) {
@@ -79,7 +96,9 @@
       onSuccess(res, files) {
         this.isImgChanged = false;
         this.isImgUploaded = true;
-        loadingInstancce.close();
+        if (loadingInstancce) {
+          loadingInstancce.close();
+        }
         this.$notify.success({
           message: '上传成功'
         });
@@ -87,28 +106,27 @@
         this.$emit('success', res, files);
       },
       beforeConverUpload(file) {
-//        console.log(file);
         if (this.lastFile === `${file.name}/${file.size}`) {
           return false;
         }
         this.lastFile = `${file.name}/${file.size}`;
 
-        const isJPGOrPNG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isJPGOrPNGOrGif = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPGOrPNG) {
-          this.$message.error('上传图片只能是 JPG/PNG 格式!');
+        if (!isJPGOrPNGOrGif) {
+          this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2MB!');
         }
-        return isJPGOrPNG && isLt2M;
+        return isJPGOrPNGOrGif && isLt2M;
       }
     }
   };
 </script>
 <style lang="scss" type="text/scss">
   .op-upload-img {
-  
+
   }
 </style>
