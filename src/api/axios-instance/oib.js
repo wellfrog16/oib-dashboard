@@ -37,7 +37,7 @@ instance.interceptors.response.use((response) => {
       // 需要登录
       const { origin, pathname, hash } = window.location;
       Notification.error({
-        title: '登录失败'
+        title: data.msg || '需要登录！'
       });
       if (!/login/.test(hash)) {
         window.location.href = `${origin}${pathname}/#/login`;
