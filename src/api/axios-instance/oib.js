@@ -35,8 +35,13 @@ instance.interceptors.response.use((response) => {
     });
     if (data.code === 401) {
       // 需要登录
-      const { origin, pathname } = window.location;
-      window.location.href = `${origin}${pathname}/#/login`;
+      const { origin, pathname, hash } = window.location;
+      Notification.error({
+        title: '登录失败'
+      });
+      if (!/login/.test(hash)) {
+        window.location.href = `${origin}${pathname}/#/login`;
+      }
     }
     return Promise.reject(data.msg);
   }
