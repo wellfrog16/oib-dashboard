@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { Loading, Notification } from 'element-ui';
 
-const baseURL = 'http://localhost:9999/oib-api';
+// const baseURL = 'http://localhost:9999/oib-api';
+const baseURL = 'http://oib-cms.test.tron-m.com/oib-api';
 
 const instance = axios.create({
   // baseURL: 'http://www.tron-m.com/oib-api',
@@ -34,7 +35,13 @@ instance.interceptors.response.use((response) => {
     });
     if (data.code === 401) {
       // 需要登录
-      window.location.href = `${window.location.origin}/#/login`;
+      const { origin, pathname, hash } = window.location;
+      Notification.error({
+        title: data.msg || '需要登录！'
+      });
+      if (!/login/.test(hash)) {
+        window.location.href = `${origin}${pathname}/#/login`;
+      }
     }
     return Promise.reject(data.msg);
   }
